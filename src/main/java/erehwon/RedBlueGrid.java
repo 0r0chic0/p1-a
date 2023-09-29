@@ -68,7 +68,26 @@ public class RedBlueGrid {
     // of space but we are still implementing it
     public boolean setColor(int row, int col, Color color) {
         // TODO: Implement this method
-        return false; // you may need to change this
+
+        //check the grid's boundary
+        if (row < 0 || row >= grid.length || col < 0 || col >= grid[0].length) {
+            return false;
+        }
+
+        boolean checkColorValidity = false;
+
+        //this for loop is to check whether the color is valid
+        for (Color key: COLORS){
+            if (color.equals(key)){
+                checkColorValidity = true;
+                break;
+            }
+        }
+        if (!checkColorValidity){return false;}
+
+        grid[row][col] = color; //if the color is valid, set the color into cell
+
+        return true; // you may need to change this
     }
 
     // for rotating through the colours in the order
