@@ -39,7 +39,7 @@ public class RedBlueGrid {
             }
         }
 
-        for (int x = rng.nextInt(size), y = rng.nextInt(size); numberOfRed > 0 && numberOfBlue > 0; numberOfBlue--, numberOfBlue--) {
+        for (int x = rng.nextInt(size), y = rng.nextInt(size); numberOfRed > 0 && numberOfBlue > 0; numberOfRed--, numberOfBlue--) {
             while (!grid[y][x].equals(COLORS[0])) {
                 y = rng.nextInt(size);
                 x = rng.nextInt(size);
