@@ -33,21 +33,21 @@ public class RedBlueGrid {
         int numberOfBlue = numberOfNonVacant - numberOfRed;
         Random rng = new Random();
 
-        for (Color[] row: grid ) {
-            for (Color color: row) {
-                color = COLORS[0];
+        for (int i=0; i < size; i++) {
+            for (int j=0; j < size; j++) {
+                grid[i][j] = COLORS[0];
             }
         }
 
         for (int x = rng.nextInt(size), y = rng.nextInt(size); numberOfRed > 0 && numberOfBlue > 0; numberOfBlue--, numberOfBlue--) {
-            while (grid[y][x] != COLORS[0]) {
+            while (!grid[y][x].equals(COLORS[0])) {
                 y = rng.nextInt(size);
                 x = rng.nextInt(size);
             }
 
             grid[y][x] = COLORS[1];
 
-            while (grid[y][x] != COLORS[0]) {
+            while (!grid[y][x].equals(COLORS[0])) {
                 y = rng.nextInt(size);
                 x = rng.nextInt(size);
             }
@@ -114,6 +114,6 @@ public class RedBlueGrid {
 // for testing purposes
 class Main {
     public static void main (String[] args) {
-
+        RedBlueGrid test = new RedBlueGrid(5,1,0.2,0.5,0.3);
     }
 }
