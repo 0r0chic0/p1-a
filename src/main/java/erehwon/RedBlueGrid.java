@@ -1,18 +1,37 @@
 package erehwon;
 
 import java.awt.Color;
+import  java.util.Random;
 
 public class RedBlueGrid {
     private static final Color[] COLORS = {Color.WHITE, Color.RED, Color.BLUE};
     private Color[][] grid;
 
-    // constructs a new erehwon grid
+    /*
+    * Constructs a n x n RedBlueGrid
+    * @param size: size of constructed grid
+    * @param neighborhoodDistance: steps need to reach a cell within the neighborhood
+    * @param fractionVacant: percentage of vacant cells
+    * @param fractionRed: percentage of non-vacant cells that are red
+    * @param happinessThreshold: percentage of same color cells in the neighborhood for a cell to attain happiness
+    * @author dzhen2023
+    */
     public RedBlueGrid(int size,
                        int neighborhoodDistance,
                        double fractionVacant,
                        double fractionRed,
                        double happinessThreshold) {
-        // TODO: Implement this constructor
+        grid = new Color[size][size];
+        int numberOfVacant = (int) (((double)(size*size)) * fractionVacant);
+        int numberOfNonVacant = (size*size) - numberOfVacant;
+        int numberOfRed = (int) (((double) numberOfNonVacant) * fractionRed);
+        int numberOfBlue = numberOfNonVacant - numberOfRed;
+        Random rng = new Random();
+
+
+
+
+
     }
 
     // do nothing for cells that are not on the grid
