@@ -6,9 +6,12 @@ import  java.util.Random;
 public class RedBlueGrid {
     private static final Color[] COLORS = {Color.WHITE, Color.RED, Color.BLUE};
     private Color[][] grid;
+    private int neighborhoodDistance;
+    private double happinessThreshold;
 
     /*
-    * Constructs a n x n RedBlueGrid
+    * Constructs n x n RedBlueGrid
+    * Vacant cells are white
     * @param size: size of constructed grid
     * @param neighborhoodDistance: steps need to reach a cell within the neighborhood
     * @param fractionVacant: percentage of vacant cells
@@ -22,14 +25,34 @@ public class RedBlueGrid {
                        double fractionRed,
                        double happinessThreshold) {
         grid = new Color[size][size];
+        this.happinessThreshold = happinessThreshold;
+        this.neighborhoodDistance = neighborhoodDistance;
         int numberOfVacant = (int) (((double)(size*size)) * fractionVacant);
         int numberOfNonVacant = (size*size) - numberOfVacant;
         int numberOfRed = (int) (((double) numberOfNonVacant) * fractionRed);
         int numberOfBlue = numberOfNonVacant - numberOfRed;
         Random rng = new Random();
 
-        while (numberOfRed > 0 && numberOfBlue > 0) {
+        for (Color[] row: grid ) {
+            for (Color color: row) {
+                color = COLORS[0];
+            }
+        }
 
+        for (int x = rng.nextInt(size), y = rng.nextInt(size); numberOfRed > 0 && numberOfBlue > 0; numberOfBlue--, numberOfBlue--) {
+            while (grid[y][x] != COLORS[0]) {
+                y = rng.nextInt(size);
+                x = rng.nextInt(size);
+            }
+
+            grid[y][x] = COLORS[1];
+
+            while (grid[y][x] != COLORS[0]) {
+                y = rng.nextInt(size);
+                x = rng.nextInt(size);
+            }
+
+            grid[y][x] = COLORS[2];
         }
     }
 
