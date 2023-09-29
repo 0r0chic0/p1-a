@@ -28,10 +28,9 @@ public class RedBlueGrid {
         int numberOfBlue = numberOfNonVacant - numberOfRed;
         Random rng = new Random();
 
+        while (numberOfRed > 0 && numberOfBlue > 0) {
 
-
-
-
+        }
     }
 
     // do nothing for cells that are not on the grid
@@ -86,5 +85,12 @@ public class RedBlueGrid {
     // simulate multiple time steps
     public void simulate(int numSteps) {
         // TODO: Implement this method
+    }
+}
+
+// for testing purposes
+class Main {
+    public static void main (String[] args) {
+
     }
 }
