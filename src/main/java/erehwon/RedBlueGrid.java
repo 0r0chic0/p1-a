@@ -1,18 +1,59 @@
 package erehwon;
 
 import java.awt.Color;
+import  java.util.Random;
 
 public class RedBlueGrid {
     private static final Color[] COLORS = {Color.WHITE, Color.RED, Color.BLUE};
     private Color[][] grid;
+    private int neighborhoodDistance;
+    private double happinessThreshold;
 
-    // constructs a new erehwon grid
+    /*
+    * Constructs n x n RedBlueGrid
+    * Vacant cells are white
+    * @param size: size of constructed grid
+    * @param neighborhoodDistance: steps need to reach a cell within the neighborhood
+    * @param fractionVacant: percentage of vacant cells
+    * @param fractionRed: percentage of non-vacant cells that are red
+    * @param happinessThreshold: percentage of same color cells in the neighborhood for a cell to attain happiness
+    * @author dzhen2023
+    */
     public RedBlueGrid(int size,
                        int neighborhoodDistance,
                        double fractionVacant,
                        double fractionRed,
                        double happinessThreshold) {
-        // TODO: Implement this constructor
+        grid = new Color[size][size];
+        this.happinessThreshold = happinessThreshold;
+        this.neighborhoodDistance = neighborhoodDistance;
+        int numberOfVacant = (int) (((double)(size*size)) * fractionVacant);
+        int numberOfNonVacant = (size*size) - numberOfVacant;
+        int numberOfRed = (int) (((double) numberOfNonVacant) * fractionRed);
+        int numberOfBlue = numberOfNonVacant - numberOfRed;
+        Random rng = new Random();
+
+        for (int i=0; i < size; i++) {
+            for (int j=0; j < size; j++) {
+                grid[i][j] = COLORS[0];
+            }
+        }
+
+        for (int x = rng.nextInt(size), y = rng.nextInt(size); numberOfRed > 0 && numberOfBlue > 0; numberOfRed--, numberOfBlue--) {
+            while (!grid[y][x].equals(COLORS[0])) {
+                y = rng.nextInt(size);
+                x = rng.nextInt(size);
+            }
+
+            grid[y][x] = COLORS[1];
+
+            while (!grid[y][x].equals(COLORS[0])) {
+                y = rng.nextInt(size);
+                x = rng.nextInt(size);
+            }
+
+            grid[y][x] = COLORS[2];
+        }
     }
 
     // do nothing for cells that are not on the grid
@@ -34,7 +75,26 @@ public class RedBlueGrid {
     // of space but we are still implementing it
     public boolean setColor(int row, int col, Color color) {
         // TODO: Implement this method
-        return false; // you may need to change this
+
+        //check the grid's boundary
+        if (row < 0 || row >= grid.length || col < 0 || col >= grid[0].length) {
+            return false;
+        }
+
+        boolean checkColorValidity = false;
+
+        //this for loop is to check whether the color is valid
+        for (Color key: COLORS){
+            if (color.equals(key)){
+                checkColorValidity = true;
+                break;
+            }
+        }
+        if (!checkColorValidity){return false;}
+
+        grid[row][col] = color; //if the color is valid, set the color into cell
+
+        return true; // you may need to change this
     }
 
     // for rotating through the colours in the order
@@ -74,5 +134,12 @@ public class RedBlueGrid {
     // simulate multiple time steps
     public void simulate(int numSteps) {
         // TODO: Implement this method
+    }
+}
+
+// for testing purposes
+class Main {
+    public static void main (String[] args) {
+        RedBlueGrid test = new RedBlueGrid(5,1,0.2,0.5,0.3);
     }
 }
