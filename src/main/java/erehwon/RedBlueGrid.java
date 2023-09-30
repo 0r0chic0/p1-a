@@ -58,14 +58,12 @@ public class RedBlueGrid {
 
     // do nothing for cells that are not on the grid
     public Color getColor(int row, int col) {
-        Color C ;
-       if(row < 0 || row > grid.length || col < 0 || col > grid.length)
+        if(row < 0 || row > grid.length || col < 0 || col > grid.length)
        {
            throw new IllegalArgumentException("Invalid Grid Values");
        }
        else {
-           C = grid [row][col];
-           return C;
+           return grid[row][col];
        }
     }
 
