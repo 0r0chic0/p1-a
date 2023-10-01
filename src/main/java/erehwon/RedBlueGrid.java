@@ -8,7 +8,6 @@ public class RedBlueGrid {
     private Color[][] grid;
     private int neighborhoodDistance;
     private double happinessThreshold;
-    private int size;
 
     /*
     * Constructs n x n RedBlueGrid
@@ -28,8 +27,6 @@ public class RedBlueGrid {
         grid = new Color[size][size];
         this.happinessThreshold = happinessThreshold;
         this.neighborhoodDistance = neighborhoodDistance;
-        this.size = size;
-
         int numberOfVacant = (int) (((double)(size*size)) * fractionVacant);
         int numberOfNonVacant = (size*size) - numberOfVacant;
         int numberOfRed = (int) (((double) numberOfNonVacant) * fractionRed);
@@ -138,35 +135,6 @@ public class RedBlueGrid {
         // TODO: Implement this method
     }
 
-    private void randomizeGrid(double fractionVacant, double fractionRed) {
-        int numberOfVacant = (int) (((double)(size*size)) * fractionVacant);
-        int numberOfNonVacant = (size*size) - numberOfVacant;
-        int numberOfRed = (int) (((double) numberOfNonVacant) * fractionRed);
-        int numberOfBlue = numberOfNonVacant - numberOfRed;
-        Random rng = new Random();
-
-        for (int i = 0; i < size; i++) {
-            for (int j=0; j < size; j++) {
-                grid[i][j] = COLORS[0];
-            }
-        }
-
-        for (int x = rng.nextInt(size), y = rng.nextInt(size); numberOfRed > 0 && numberOfBlue > 0; numberOfRed--, numberOfBlue--) {
-            while (!grid[y][x].equals(COLORS[0])) {
-                y = rng.nextInt(size);
-                x = rng.nextInt(size);
-            }
-
-            grid[y][x] = COLORS[1];
-
-            while (!grid[y][x].equals(COLORS[0])) {
-                y = rng.nextInt(size);
-                x = rng.nextInt(size);
-            }
-
-            grid[y][x] = COLORS[2];
-        }
-    }
 }
 
 // for testing purposes
