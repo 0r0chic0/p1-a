@@ -8,14 +8,15 @@ public class RedBlueGrid {
     private Color[][] grid;
     private int neighborhoodDistance;
     private double happinessThreshold;
+    private int size;
 
-    /*
+    /**
     * Constructs n x n RedBlueGrid
     * Vacant cells are white
-    * @param size: size of constructed grid
-    * @param neighborhoodDistance: steps need to reach a cell within the neighborhood
-    * @param fractionVacant: percentage of vacant cells
-    * @param fractionRed: percentage of non-vacant cells that are red
+    * @param size is size of constructed grid
+    * @param neighborhoodDistance is steps need to reach a cell within the neighborhood
+    * @param fractionVacant is percentage of vacant cells in grid
+    * @param fractionRed is percentage of non-vacant cells that are red in grid
     * @param happinessThreshold: percentage of same color cells in the neighborhood for a cell to attain happiness
     * @author dzhen2023
     */
@@ -27,6 +28,16 @@ public class RedBlueGrid {
         grid = new Color[size][size];
         this.happinessThreshold = happinessThreshold;
         this.neighborhoodDistance = neighborhoodDistance;
+        this.size = size;
+        randomizeGrid(fractionVacant,fractionRed);
+        }
+
+    /**
+     * effects: changes grid colors with given values
+     * @param fractionVacant is percentage of vacant cells in grid
+     * @param fractionRed is percentage of non-vacant cells that are red in grid
+     */
+    private void randomizeGrid (double fractionVacant, double fractionRed) {
         int numberOfVacant = (int) (((double)(size*size)) * fractionVacant);
         int numberOfNonVacant = (size*size) - numberOfVacant;
         int numberOfRed = (int) (((double) numberOfNonVacant) * fractionRed);
@@ -110,7 +121,7 @@ public class RedBlueGrid {
                       double fractionRed,
                       double happinessThreshold) {
         this.happinessThreshold = happinessThreshold;
-
+        randomizeGrid(fractionVacant,fractionRed);
     }
 
     // is the resident at the given cell happy?
