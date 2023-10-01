@@ -50,20 +50,23 @@ public class RedBlueGrid {
             }
         }
 
-        for (int x = rng.nextInt(size), y = rng.nextInt(size); numberOfRed > 0 && numberOfBlue > 0; numberOfRed--, numberOfBlue--) {
-            while (!grid[y][x].equals(COLORS[0])) {
-                y = rng.nextInt(size);
-                x = rng.nextInt(size);
-            }
-
-            grid[y][x] = COLORS[1];
-
-            while (!grid[y][x].equals(COLORS[0])) {
-                y = rng.nextInt(size);
-                x = rng.nextInt(size);
-            }
-
-            grid[y][x] = COLORS[2];
+        for (int x = rng.nextInt(size), y = rng.nextInt(size); numberOfRed > 0 && numberOfBlue > 0;) {
+           if (numberOfRed > 0) {
+               while (!grid[y][x].equals(COLORS[0])) {
+                   y = rng.nextInt(size);
+                   x = rng.nextInt(size);
+               }
+               grid[y][x] = COLORS[1];
+               numberOfRed--;
+           }
+           if (numberOfBlue > 0) {
+               while (!grid[y][x].equals(COLORS[0])) {
+                   y = rng.nextInt(size);
+                   x = rng.nextInt(size);
+               }
+               grid[y][x] = COLORS[2];
+               numberOfBlue--;
+           }
         }
     }
 
@@ -151,6 +154,6 @@ public class RedBlueGrid {
 // for testing purposes
 class Main {
     public static void main (String[] args) {
-        RedBlueGrid test = new RedBlueGrid(5,1,0.2,0.5,0.3);
+        RedBlueGrid test = new RedBlueGrid(8,1,0.15,0.5,0.3);
     }
 }

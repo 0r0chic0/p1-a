@@ -9,7 +9,7 @@ import java.util.Hashtable;
 public class RedBlueGridUI extends JFrame {
     private static final int GRID_SIZE = 8;
     private static final double DEFAULT_VACANT = 0.15; //changed from 15
-    private static final double DEFAULT_RED = 0.5; //changed from 50
+    private static final double DEFAULT_RED = 0.50; //changed from 50
     private static final int DEFAULT_NEIGHBORHOOD_DISTANCE = 1;
     private static final double DEFAULT_HAPPINESS_THRESHOLD = 0.30;
 
