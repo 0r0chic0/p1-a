@@ -9,15 +9,17 @@ public class RedBlueGrid {
     private int neighborhoodDistance;
     private double happinessThreshold;
     private int size;
+    private int cellsInNeighborhood;
 
     /**
     * Constructs n x n RedBlueGrid
     * Vacant cells are white
+     * if fractions result in non integer values then they will be rounded down
     * @param size is size of constructed grid
     * @param neighborhoodDistance is steps need to reach a cell within the neighborhood
     * @param fractionVacant is percentage of vacant cells in grid
     * @param fractionRed is percentage of non-vacant cells that are red in grid
-    * @param happinessThreshold: percentage of same color cells in the neighborhood for a cell to attain happiness
+    * @param happinessThreshold: percentage of same color cells in the neighborhood for a cell to attain happiness, > 0
     * @author dzhen2023
     */
     public RedBlueGrid(int size,
@@ -86,7 +88,6 @@ public class RedBlueGrid {
     // this method may violate the fractional allocation
     // of space but we are still implementing it
     public boolean setColor(int row, int col, Color color) {
-        // TODO: Implement this method
 
         //check the grid's boundary
         if (row < 0 || row >= grid.length || col < 0 || col >= grid[0].length) {
@@ -112,11 +113,9 @@ public class RedBlueGrid {
     // for rotating through the colours in the order
     // WHITE -> RED -> BLUE -> WHITE -> ...
     public void shiftColor(int row, int col) {
-        // TODO: Implement this method
         if (row < 0 || row >= grid.length || col < 0 || col >= grid[0].length) {
             return; // Out of  boundaries
         }
-
 
         Color currentColor = grid[row][col];
 
@@ -130,11 +129,13 @@ public class RedBlueGrid {
         }
     }
 
-    // recolour the cells with the given
-    // fraction of vacant cells, the fraction
-    // of non-vacant cells that are red
-    // (the rest are blue cells),
-    // and a possibly new happiness threshold
+    /**
+     *
+     * @param fractionVacant: fraction of vacant cells to mutate grid with
+     * @param fractionRed: fraction of red cells to mutate grid with
+     * @param happinessThreshold: new happinessThreshold
+     * @author dzhen2023
+     */
     public void reset(double fractionVacant,
                       double fractionRed,
                       double happinessThreshold) {
@@ -142,10 +143,35 @@ public class RedBlueGrid {
         randomizeGrid(fractionVacant,fractionRed);
     }
 
-    // is the resident at the given cell happy?
+    /**
+     *
+     * @param row: row index of grid
+     * @param col: col index of grid
+     * @return if the resident at specified cell is happy, throws illegalArgumentException if out of bounds
+     */
     public boolean isHappy(int row, int col) {
-        // TODO: Implement this method
-        return false;
+        if (row < 0 || col < 0 || row >= grid.length || col >= grid[0].length) {
+            throw new IllegalArgumentException("Invalid Grid Index");
+        }
+
+        return true;
+    }
+
+    private int numOfCellsInNeighborhood(int row, int col) {
+
+        return 0;
+    }
+
+    /**
+     * returns number of cells in neighborhood when no cells are cut off
+     */
+    static private int standardNeighborhoodSize(int neighborhoodDistance) {
+        if (neighborhoodDistance == 1) {
+            return 8;
+        }
+
+        return standardNeighborhoodSize(neighborhoodDistance-1)
+                + 8 * neighborhoodDistance;
     }
 
     // what fraction of the erehwon residents are happy?
@@ -169,6 +195,7 @@ public class RedBlueGrid {
 // for testing purposes
 class Main {
     public static void main (String[] args) {
-        RedBlueGrid test = new RedBlueGrid(8,1,0.15,0.5,0.3);
+            System.out.print(RedBlueGrid.standardNeighborhoodSize(4));
+        System.out.println();
     }
 }
