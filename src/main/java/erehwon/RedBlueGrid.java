@@ -225,7 +225,7 @@ public class RedBlueGrid {
         sameCount--;
         cellCount--;
 
-        return (double) ((double) sameCount / (double) cellCount) >= happinessThreshold;
+        return ((double) sameCount / (double) cellCount) >= happinessThreshold;
     }
 
     /**
@@ -254,6 +254,8 @@ public class RedBlueGrid {
 // for testing purposes
 class Main {
     public static void main (String[] args) {
+
+        RedBlueGrid test1 = new RedBlueGrid(8,4,0.2,0.5,0.3);
 
     }
 }
