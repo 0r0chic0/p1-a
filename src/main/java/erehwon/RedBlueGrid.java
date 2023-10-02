@@ -148,6 +148,7 @@ public class RedBlueGrid {
      * @param row: row index of grid
      * @param col: col index of grid
      * @return if the resident at specified cell is happy, throws illegalArgumentException if out of bounds
+     * @author dzhen2023
      */
     public boolean isHappy(int row, int col) {
         if (row < 0 || col < 0 || row >= grid.length || col >= grid[0].length) {
@@ -231,9 +232,6 @@ public class RedBlueGrid {
      * @return true if color at index is the same as input color
      * @author dzhen2023
      */
-    private boolean compareColor (int row, int col, Color colorToCompare) {
-        return getColor(row, col).equals(colorToCompare);
-    }
 
     // what fraction of the erehwon residents are happy?
     public double fractionHappy() {
