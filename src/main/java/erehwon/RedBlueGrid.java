@@ -151,7 +151,7 @@ public class RedBlueGrid {
      * @author dzhen2023
      */
     public boolean isHappy(int row, int col) {
-        if (row < 0 || col < 0 || row >= grid.length || col >= grid[0].length) {
+        if (row < 0 || col < 0 || row >= size || col >= size) {
             throw new IllegalArgumentException("Invalid Grid Index");
         }
 
@@ -164,7 +164,7 @@ public class RedBlueGrid {
         int rightBound = neighborhoodDistance;
 
         for (int i = 0; i <= rightBound; i++) {
-            if (col + i >= grid[0].length) {
+            if (col + i >= size) {
                 rightBound = i - 1;
                 break;
             }
@@ -180,7 +180,7 @@ public class RedBlueGrid {
             }
 
             for (int j = 1; j <= bottomBound; j++) {
-                if (row + j >= grid.length) {
+                if (row + j >= size) {
                     bottomBound = j - 1;
                     break;
                 }
