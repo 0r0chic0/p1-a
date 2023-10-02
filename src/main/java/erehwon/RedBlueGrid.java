@@ -154,24 +154,85 @@ public class RedBlueGrid {
             throw new IllegalArgumentException("Invalid Grid Index");
         }
 
-        return true;
-    }
+        Color currentCellColor = getColor(row,col);
+        int cellCount = 0;
+        int sameCount = 0;
+        int topBound = -neighborhoodDistance;
+        int bottomBound = neighborhoodDistance;
+        int leftBound = -neighborhoodDistance;
+        int rightBound = neighborhoodDistance;
 
-    private int numOfCellsInNeighborhood(int row, int col) {
+        for (int i = 0; i <= rightBound; i++) {
+            if (col + i >= grid[0].length) {
+                rightBound = i - 1;
+                break;
+            }
+            for (int j = -1; j >= topBound; j--) {
+                if (row + j < 0) {
+                    topBound = j + 1;
+                    break;
+                }
+                cellCount++;
+                if (getColor(row + j, col).equals(currentCellColor)) {
+                    sameCount++;
+                }
+            }
 
-        return 0;
+            for (int j = 1; j <= bottomBound; j++) {
+                if (row + j >= grid.length) {
+                    bottomBound = j - 1;
+                    break;
+                }
+                cellCount++;
+                if (getColor(row + j, col).equals(currentCellColor)) {
+                    sameCount++;
+                }
+            }
+
+            cellCount++;
+            if (getColor(row, col + i).equals(currentCellColor)) {
+                sameCount++;
+            }
+        }
+
+        for (int i = -1; i >= leftBound; i--) {
+            if (col + i < 0) {
+                leftBound = i + 1;
+                break;
+            }
+
+            for (int j = -1; j >= topBound; j--) {
+                cellCount++;
+                if (getColor(row + j,col).equals(currentCellColor)) {
+                    sameCount++;
+                }
+            }
+
+            for (int j = 1; j <= bottomBound; j++) {
+                cellCount++;
+                if (getColor(row + j,col).equals(currentCellColor)) {
+                    sameCount++;
+                }
+            }
+
+            cellCount++;
+            if (getColor(row, col + i).equals(currentCellColor)) {
+                sameCount++;
+            }
+        }
+
+        sameCount--;
+        cellCount--;
+
+        return (double) ((double) sameCount / (double) cellCount) >= happinessThreshold;
     }
 
     /**
-     * returns number of cells in neighborhood when no cells are cut off
+     * @return true if color at index is the same as input color
+     * @author dzhen2023
      */
-    static private int standardNeighborhoodSize(int neighborhoodDistance) {
-        if (neighborhoodDistance == 1) {
-            return 8;
-        }
-
-        return standardNeighborhoodSize(neighborhoodDistance-1)
-                + 8 * neighborhoodDistance;
+    private boolean compareColor (int row, int col, Color colorToCompare) {
+        return getColor(row, col).equals(colorToCompare);
     }
 
     // what fraction of the erehwon residents are happy?
@@ -195,7 +256,6 @@ public class RedBlueGrid {
 // for testing purposes
 class Main {
     public static void main (String[] args) {
-            System.out.print(RedBlueGrid.standardNeighborhoodSize(4));
-        System.out.println();
+
     }
 }
