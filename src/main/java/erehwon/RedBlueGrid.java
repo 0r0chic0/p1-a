@@ -257,5 +257,23 @@ class Main {
 
         RedBlueGrid test1 = new RedBlueGrid(8,4,0.2,0.5,0.3);
 
+
+        //test for 2nd task
+        RedBlueGrid test2 = new RedBlueGrid(10, 2, 0.3, 0.6, 0.4);
+
+        // shiftColor method test
+        System.out.println("At the beginning: color at (3,4): " + test2.getColor(3, 4));
+        test2.shiftColor(3, 4);
+        System.out.println("Color at (3,4) through 1st shift: " + test2.getColor(3, 4));
+        test2.shiftColor(3, 4);
+        System.out.println("Color at (3,4) through 2nd shift: " + test2.getColor(3, 4));
+        test2.shiftColor(3, 4);
+        System.out.println("Color at (3,4) through 3rd shift: " + test2.getColor(3, 4));
+
+        //  reset method test
+        // 60% vacant; 30% red; 0.5 for happinessThreshold
+        test2.reset(0.6, 0.3, 0.5);
+        System.out.println("Color at (3,4) through reset: " + test2.getColor(3, 4));
+
     }
 }
