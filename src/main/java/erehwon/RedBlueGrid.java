@@ -113,6 +113,21 @@ public class RedBlueGrid {
     // WHITE -> RED -> BLUE -> WHITE -> ...
     public void shiftColor(int row, int col) {
         // TODO: Implement this method
+        if (row < 0 || row >= grid.length || col < 0 || col >= grid[0].length) {
+            return; // Out of  boundaries
+        }
+
+
+        Color currentColor = grid[row][col];
+
+        // find the next color
+        if (currentColor.equals(Color.WHITE)) {
+            grid[row][col] = Color.RED;
+        } else if (currentColor.equals(Color.RED)) {
+            grid[row][col] = Color.BLUE;
+        } else if (currentColor.equals(Color.BLUE)) {
+            grid[row][col] = Color.WHITE;
+        }
     }
 
     // recolour the cells with the given
