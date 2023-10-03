@@ -235,8 +235,18 @@ public class RedBlueGrid {
 
     // what fraction of the erehwon residents are happy?
     public double fractionHappy() {
-        // TODO: Implement this method
-        return -1;
+        int counter = 0;
+        double frac = 0;
+       for(int i = 0; i < size ; i++)
+       {
+           for(int j = 0; j < size ; j++)
+           {
+               if(isHappy(i,j))
+                   counter++;
+           }
+       }
+      frac = counter / (size * size);
+       return frac;
     }
 
     // simulate exactly one time step of movement
