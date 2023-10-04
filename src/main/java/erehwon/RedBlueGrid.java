@@ -8,8 +8,12 @@ public class RedBlueGrid {
     private Color[][] grid;
     private int neighborhoodDistance;
     private double happinessThreshold;
-    private int size;
+    public int size;
     private int cellsInNeighborhood;
+
+    public int counter1 = 0;
+
+    public int counter2 = 0;
 
     /**
     * Constructs n x n RedBlueGrid
@@ -52,7 +56,8 @@ public class RedBlueGrid {
             }
         }
 
-        for (int x = rng.nextInt(size), y = rng.nextInt(size); numberOfRed > 0 && numberOfBlue > 0;) {
+        for (int x = rng.nextInt(size), y = rng.nextInt(size); numberOfRed > 0 || numberOfBlue > 0;) //changed && to ||
+        {
            if (numberOfRed > 0) {
                while (!grid[y][x].equals(COLORS[0])) {
                    y = rng.nextInt(size);
@@ -60,14 +65,16 @@ public class RedBlueGrid {
                }
                grid[y][x] = COLORS[1];
                numberOfRed--;
+               counter1++;
            }
-           if (numberOfBlue > 0) {
+            if (numberOfBlue > 0) {
                while (!grid[y][x].equals(COLORS[0])) {
                    y = rng.nextInt(size);
                    x = rng.nextInt(size);
                }
                grid[y][x] = COLORS[2];
                numberOfBlue--;
+               counter2++;
            }
         }
     }
@@ -248,6 +255,10 @@ public class RedBlueGrid {
       frac = counter / (size * size);
        return frac;
     }
+    /**
+     * @return frac which is the fraction of happy residents
+     * @author 0r0chic0
+     */
 
     // simulate exactly one time step of movement
     public void oneTimeStep() {
@@ -264,10 +275,25 @@ public class RedBlueGrid {
 // for testing purposes
 class Main {
     public static void main (String[] args) {
-
-        RedBlueGrid test1 = new RedBlueGrid(8,4,0.2,0.5,0.3);
-
-
+        // test to check if the grid is configured properly
+        RedBlueGrid test1 = new RedBlueGrid(8, 4, 0.2, 0.5, 0.3);
+        double square = test1.size * test1.size;
+        double r =  Math.round((test1.counter1 / (0.8 * square))*10);
+        double red = r/10;
+        double b = Math.round((test1.counter2 / (0.8 * square))*10);
+        double blue = b/10;
+        double v = Math.round(((square - (test1.counter1 + test1.counter2))/square)*10);
+        double vacant = v/10;
+        System.out.println(red);
+        System.out.println(blue);
+        System.out.println(vacant);
+        System.out.println((test1.size) * (test1.size));
+        if (red == 0.5 && blue == 0.5 && vacant == 0.2) {
+            System.out.println("True");
+        }
+        else {
+            System.out.println("False");
+        }
         //test for 2nd task
         RedBlueGrid test2 = new RedBlueGrid(10, 2, 0.3, 0.6, 0.4);
 
