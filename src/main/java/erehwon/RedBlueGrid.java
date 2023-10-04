@@ -1,7 +1,10 @@
 package erehwon;
 
-import java.awt.Color;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import  java.util.Random;
+import java.util.List;
 
 public class RedBlueGrid {
     private static final Color[] COLORS = {Color.WHITE, Color.RED, Color.BLUE};
@@ -262,8 +265,35 @@ public class RedBlueGrid {
 
     // simulate exactly one time step of movement
     public void oneTimeStep() {
-        // TODO: Implement this method
+        //use point class to store coordinates of cells;
+        List<Point> unhappyPeople = new ArrayList<>();
+        List<Point> vacant = new ArrayList<>();
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (grid[i][j].equals(COLORS[0])) {
+                    vacant.add(new Point(i, j));  //identify vancant cells
+                } else if (!isHappy(i, j)) {
+                    unhappyPeople.add(new Point(i, j)); //identify unhappy people
+                }
+            }
+        }
+
+        // ensures that the movement of unhappy people to vacant cells is done in a randomized manner.
+        Collections.shuffle(unhappyPeople);
+        //compare which one is the minimum
+        int mini = Math.min(vacant.size(), unhappyPeople.size());
+
+        for (int i = 0; i < mini; i++) {
+            Point origin = unhappyPeople.get(i);
+            Point empty = vacant.get(i);
+
+            grid[empty.x][empty.y] = grid[origin.x][origin.y]; // Move  person to the empty cell
+            grid[origin.x][origin.y] = COLORS[0]; // Set the original cell to vacant after moving people
+        }
     }
+
+
 
     // simulate multiple time steps
     public void simulate(int numSteps) {
