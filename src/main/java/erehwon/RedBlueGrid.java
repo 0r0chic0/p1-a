@@ -9,23 +9,28 @@ import java.util.List;
 public class RedBlueGrid {
     private static final Color[] COLORS = {Color.WHITE, Color.RED, Color.BLUE};
     private Color[][] grid;
-    private int neighborhoodDistance;
+    private final int neighborhoodDistance;
     private double happinessThreshold;
-    public int size;
+    public final int size;
+    public int counterRed = 0; // changed name
 
-    public int counter1 = 0;
-
-    public int counter2 = 0;
+    public int counterBlue = 0; // changed name
 
     /**
-    * Constructs n x n RedBlueGrid
+    * Constructs n x n RedBlueGrid.
     * Vacant cells are white
      * if fractions result in non integer values then they will be rounded down
-    * @param size is size of constructed grid
-    * @param neighborhoodDistance is steps need to reach a cell within the neighborhood
-    * @param fractionVacant is the fraction of vacant cells in grid
-    * @param fractionRed is the fraction of non-vacant cells that are red in grid
-    * @param happinessThreshold is the fraction of same color cells in the neighborhood for a cell to attain happiness and is > 0
+    * @param size:  number of rows and columns to initialize grid with;
+     *              requires size > 0
+    * @param neighborhoodDistance:  number of steps in any direction around a cell for
+     *                              another cell to be considered in the neighborhood;
+     *                              requires neighborhoodDistance >= 1
+    * @param fractionVacant:    the fraction of vacant (white) cells in the grid;
+     *                          requires fractionVacant >= 0
+    * @param fractionRed:   the fraction of non-vacant (not white) red cells in the grid
+     *                      requires fractionRed >= 0
+    * @param happinessThreshold:    the fraction of same color cells in the neighborhood of a cell to attain happiness;
+     *                              requires happinessThreshold >= 0
     * @author dzhen2023
     */
     public RedBlueGrid(int size,
@@ -40,11 +45,14 @@ public class RedBlueGrid {
         randomizeGrid(fractionVacant,fractionRed);
         }
 
+
     /**
-     * effects: changes grid colors with given values
-     * @param fractionVacant is percentage of vacant cells in grid
-     * @param fractionRed is percentage of non-vacant cells that are red in grid
-     * @author dzhen2023
+     * Randomizes grid cell colors with specified inputs.
+     * @param fractionVacant:   fraction of vacant (white) cells the grid is to have;
+     *                          requires fractionVacant >= 0
+     * @param fractionRed:  fraction of non-vacant red cells the grid is to have;
+     *                      requires fractionRed >= 0
+     * @author  dzhen2023
      */
     private void randomizeGrid (double fractionVacant, double fractionRed) {
         int numberOfVacant = (int) (((double)(size*size)) * fractionVacant);
@@ -68,7 +76,7 @@ public class RedBlueGrid {
                }
                grid[y][x] = COLORS[1];
                numberOfRed--;
-               counter1++;
+               counterRed++;
            }
             if (numberOfBlue > 0) {
                while (!grid[y][x].equals(COLORS[0])) {
@@ -77,22 +85,23 @@ public class RedBlueGrid {
                }
                grid[y][x] = COLORS[2];
                numberOfBlue--;
-               counter2++;
+               counterBlue++;
            }
         }
     }
 
     /**
-     * @param row is the row index of the grid
-     * @param col is the column index of the grid
-     * @return the color at specified grid
-     * @throws IllegalArgumentException when row and column index are out of bounds
-     * @author 0r0chic0
+     * Gets color of a specified cell.
+     * @param row:  row index of the grid
+     * @param col:  column index of the grid
+     * @return  color at specified grid (Red, Blue, or White)
+     * @throws  IllegalArgumentException when row and column index are out of bounds
+     * @author  0r0chic0
      */
     public Color getColor(int row, int col) {
-        if(row < 0 || row > grid.length || col < 0 || col > grid.length)
+        if(!withinBounds(row,col))
        {
-           throw new IllegalArgumentException("Invalid Grid Values");
+           throw new IllegalArgumentException("Out of Bounds");
        }
        else {
            return grid[row][col];
@@ -100,30 +109,27 @@ public class RedBlueGrid {
     }
 
     /**
-     *
-     * @param row is the row index of the grid
-     * @param col is the column index of the grid
-     * @param color is the color to be set
-     * @return if color change is successful
-     * @author kevinlin1029
+     * Changes color of specified cell.
+     * @param row:  row index of the grid
+     * @param col:  column index of the grid
+     * @param color:    color to be changed to
+     * @return  if color change is successful
+     * @author  kevinlin1029
      */
     public boolean setColor(int row, int col, Color color) {
-
-        //check the grid's boundary
-        if (row < 0 || row >= grid.length || col < 0 || col >= grid[0].length) {
+        if (!withinBounds(row, col))
             return false;
-        }
 
-        boolean checkColorValidity = false;
+        boolean isValidColor = false;
 
         //this for loop is to check whether the color is valid
-        for (Color key: COLORS){
-            if (color.equals(key)){
-                checkColorValidity = true;
+        for (Color validColor: COLORS){
+            if (color.equals(validColor)){
+                isValidColor = true;
                 break;
             }
         }
-        if (!checkColorValidity){return false;}
+        if (!isValidColor){return false;}
 
         grid[row][col] = color; //if the color is valid, set the color into cell
 
@@ -133,14 +139,15 @@ public class RedBlueGrid {
 
 
     /**
-     * effects: rotates a cell's color by this order: WHITE -> RED -> BLUE -> WHITE
-     * @param row is the row index of grid
-     * @param col is the column index of grid
-     * @author kevinlin1029
+     * Rotates a cell's color by this order: WHITE -> RED -> BLUE -> WHITE.
+     * @param row:  row index of grid
+     * @param col:  column index of grid
+     * @throws IllegalArgumentException when row and column index are out of bounds
+     * @author  kevinlin1029
      */
     public void shiftColor(int row, int col) {
-        if (row < 0 || row >= grid.length || col < 0 || col >= grid[0].length) {
-            return; // Out of  boundaries
+        if (!withinBounds(row,col)) {
+            throw new IllegalArgumentException("Out of Bounds");
         }
 
         Color currentColor = grid[row][col];
@@ -156,11 +163,14 @@ public class RedBlueGrid {
     }
 
     /**
-     * effects: randomize RedBlueGrid with desired inputs entered in the GUI
-     * @param fractionVacant is fraction of vacant cells to mutate grid with
-     * @param fractionRed is fraction of red cells to mutate grid with
-     * @param happinessThreshold is new happinessThreshold
-     * @author dzhen2023
+     * Randomize grid colors and cell happiness threshold with desired inputs.
+     * @param fractionVacant:   fraction of vacant (white) cells for grid to have;
+     *                          requires fractionVacant >= 0
+     * @param fractionRed:  fraction of red cells for grid to have;
+     *                      requires fractionRed >= 0
+     * @param happinessThreshold:   new happinessThreshold;
+     *                              requires happinessThreshold >= 0
+     * @author  dzhen2023
      */
     public void reset(double fractionVacant,
                       double fractionRed,
@@ -170,11 +180,11 @@ public class RedBlueGrid {
     }
 
     /**
-     * @param row is row index of grid
-     * @param col is column index of grid
-     * @return if the resident at specified cell is happy
-     * @throws IllegalArgumentException if out of bounds
-     * @author dzhen2023
+     * @param row: row index of grid
+     * @param col: column index of grid
+     * @return  if resident at specified cell is happy
+     * @throws  IllegalArgumentException if specified index is out of bounds
+     * @author  dzhen2023
      */
     public boolean isHappy(int row, int col) {
         Color currentCellColor = getColor(row,col);
@@ -188,7 +198,6 @@ public class RedBlueGrid {
      */
     public double fractionHappy() {
         int counter = 0;
-        double frac = 0;
        for(int i = 0; i < size ; i++)
        {
            for(int j = 0; j < size ; j++)
@@ -197,13 +206,12 @@ public class RedBlueGrid {
                    counter++;
            }
        }
-      frac = (double) counter / (size * size); // cast double to value
-       return frac;
+       return (double) counter / (size * size); // cast double to value and shortened code
     }
 
 
     /**
-     * effects: moves unhappy residents randomly in one time step
+     * Moves unhappy residents to vacant (white) cells randomly in one time step.
      * @author kevinlin1029
      */
     public void oneTimeStep() {
@@ -237,9 +245,9 @@ public class RedBlueGrid {
 
 
     /**
-     * effects: simulates the RedBlueGrid in a non-randomized way
-     * @param numSteps is the number of times the Simulation will run
-     * @author dzhen2023
+     * Simulates the RedBlueGrid in a non-randomized way
+     * @param numSteps:     number of time steps the simulation will run for
+     * @author  dzhen2023
      */
     public void simulate(int numSteps) {
         for (int k = 0; k < numSteps; k++) {
@@ -291,8 +299,8 @@ public class RedBlueGrid {
      * @author dzhen2023
      */
     private boolean happinessCheck(int row, int col, Color color) {
-        if (row < 0 || col < 0 || row >= size || col >= size) {
-            throw new IllegalArgumentException("Invalid Grid Index");
+        if (!withinBounds(row, col)) {
+            throw new IllegalArgumentException("Out of Bounds");
         }
 
         int cellCount = 0;
@@ -367,6 +375,14 @@ public class RedBlueGrid {
         return ((double) sameCount / (double) cellCount) >= happinessThreshold;
     }
 
+    /**
+     * @param row: row index of grid
+     * @param col: column index of grid
+     * @return if row or column index is out of bounds
+     */
+    private boolean withinBounds (int row, int col) {
+        return !(row < 0 || row >= size || col < 0 || col >= size);
+    }
 
 }
 
@@ -376,11 +392,11 @@ class Main {
         // test to check if the grid is configured properly
         RedBlueGrid test1 = new RedBlueGrid(8, 4, 0.2, 0.5, 0.3);
         double square = test1.size * test1.size;
-        double r =  Math.round((test1.counter1 / (0.8 * square))*10);
+        double r =  Math.round((test1.counterRed / (0.8 * square))*10);
         double red = r/10;
-        double b = Math.round((test1.counter2 / (0.8 * square))*10);
+        double b = Math.round((test1.counterBlue / (0.8 * square))*10);
         double blue = b/10;
-        double v = Math.round(((square - (test1.counter1 + test1.counter2))/square)*10);
+        double v = Math.round(((square - (test1.counterRed + test1.counterRed))/square)*10);
         double vacant = v/10;
         System.out.println(red);
         System.out.println(blue);
