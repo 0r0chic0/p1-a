@@ -23,9 +23,9 @@ public class RedBlueGrid {
      * if fractions result in non integer values then they will be rounded down
     * @param size is size of constructed grid
     * @param neighborhoodDistance is steps need to reach a cell within the neighborhood
-    * @param fractionVacant is percentage of vacant cells in grid
-    * @param fractionRed is percentage of non-vacant cells that are red in grid
-    * @param happinessThreshold: percentage of same color cells in the neighborhood for a cell to attain happiness, > 0
+    * @param fractionVacant is the fraction of vacant cells in grid
+    * @param fractionRed is the fraction of non-vacant cells that are red in grid
+    * @param happinessThreshold is the fraction of same color cells in the neighborhood for a cell to attain happiness and is > 0
     * @author dzhen2023
     */
     public RedBlueGrid(int size,
@@ -44,6 +44,7 @@ public class RedBlueGrid {
      * effects: changes grid colors with given values
      * @param fractionVacant is percentage of vacant cells in grid
      * @param fractionRed is percentage of non-vacant cells that are red in grid
+     * @author dzhen2023
      */
     private void randomizeGrid (double fractionVacant, double fractionRed) {
         int numberOfVacant = (int) (((double)(size*size)) * fractionVacant);
@@ -81,7 +82,13 @@ public class RedBlueGrid {
         }
     }
 
-    // do nothing for cells that are not on the grid
+    /**
+     * @param row is the row index of the grid
+     * @param col is the column index of the grid
+     * @return the color at specified grid
+     * @throws IllegalArgumentException when row and column index are out of bounds
+     * @author 0r0chic0
+     */
     public Color getColor(int row, int col) {
         if(row < 0 || row > grid.length || col < 0 || col > grid.length)
        {
@@ -92,10 +99,14 @@ public class RedBlueGrid {
        }
     }
 
-    // can only set a valid colour for this project
-    // do nothing for cells that are not on the grid
-    // this method may violate the fractional allocation
-    // of space but we are still implementing it
+    /**
+     *
+     * @param row is the row index of the grid
+     * @param col is the column index of the grid
+     * @param color is the color to be set
+     * @return if color change is successful
+     * @author kevinlin1029
+     */
     public boolean setColor(int row, int col, Color color) {
 
         //check the grid's boundary
@@ -119,8 +130,14 @@ public class RedBlueGrid {
         return true; // you may need to change this
     }
 
-    // for rotating through the colours in the order
-    // WHITE -> RED -> BLUE -> WHITE -> ...
+
+
+    /**
+     * effects: rotates a cell's color by this order: WHITE -> RED -> BLUE -> WHITE
+     * @param row is the row index of grid
+     * @param col is the column index of grid
+     * @author kevinlin1029
+     */
     public void shiftColor(int row, int col) {
         if (row < 0 || row >= grid.length || col < 0 || col >= grid[0].length) {
             return; // Out of  boundaries
@@ -139,10 +156,10 @@ public class RedBlueGrid {
     }
 
     /**
-     *
-     * @param fractionVacant: fraction of vacant cells to mutate grid with
-     * @param fractionRed: fraction of red cells to mutate grid with
-     * @param happinessThreshold: new happinessThreshold
+     * effects: randomize RedBlueGrid with desired inputs entered in the GUI
+     * @param fractionVacant is fraction of vacant cells to mutate grid with
+     * @param fractionRed is fraction of red cells to mutate grid with
+     * @param happinessThreshold is new happinessThreshold
      * @author dzhen2023
      */
     public void reset(double fractionVacant,
@@ -153,10 +170,10 @@ public class RedBlueGrid {
     }
 
     /**
-     *
-     * @param row: row index of grid
-     * @param col: col index of grid
-     * @return if the resident at specified cell is happy, throws illegalArgumentException if out of bounds
+     * @param row is row index of grid
+     * @param col is column index of grid
+     * @return if the resident at specified cell is happy
+     * @throws IllegalArgumentException if out of bounds
      * @author dzhen2023
      */
     public boolean isHappy(int row, int col) {
@@ -166,7 +183,7 @@ public class RedBlueGrid {
 
 
     /**
-     * @return frac which is the fraction of happy residents
+     * @return the fraction of happy residents
      * @author 0r0chic0
      */
     public double fractionHappy() {
@@ -185,7 +202,10 @@ public class RedBlueGrid {
     }
 
 
-    // simulate exactly one time step of movement
+    /**
+     * effects: moves unhappy residents randomly in one time step
+     * @author kevinlin1029
+     */
     public void oneTimeStep() {
         //use point class to store coordinates of cells;
         List<Point> unhappyPeople = new ArrayList<>();
@@ -219,6 +239,7 @@ public class RedBlueGrid {
     /**
      * effects: simulates the RedBlueGrid in a non-randomized way
      * @param numSteps is the number of times the Simulation will run
+     * @author dzhen2023
      */
     public void simulate(int numSteps) {
         for (int k = 0; k < numSteps; k++) {
@@ -267,6 +288,7 @@ public class RedBlueGrid {
      * @param color is color to check happiness of
      * @throws IllegalArgumentException when grid index is out of range
      * @return if the color would be happy at specified row and col
+     * @author dzhen2023
      */
     private boolean happinessCheck(int row, int col, Color color) {
         if (row < 0 || col < 0 || row >= size || col >= size) {

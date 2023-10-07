@@ -1,4 +1,4 @@
 - Wrote constructor method in RedBlueGrid
 - Wrote reset method
 - Wrote isHappy method
-- 
+- Wrote first implementation of simulate method
