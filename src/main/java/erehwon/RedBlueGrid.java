@@ -12,9 +12,9 @@ public class RedBlueGrid {
     private final int neighborhoodDistance;
     private double happinessThreshold;
     public final int size;
-    public int counterRed = 0; // changed name
+    private int counterRed = 0; // changed name
 
-    public int counterBlue = 0; // changed name
+    private int counterBlue = 0; // changed name
 
     /**
     * Constructs n x n RedBlueGrid.
@@ -193,20 +193,20 @@ public class RedBlueGrid {
 
 
     /**
-     * @return the fraction of happy residents
-     * @author 0r0chic0
+     * @return  fraction of happy residents
+     * @author  0r0chic0
      */
     public double fractionHappy() {
-        int counter = 0;
+        int happyCounter = 0;
        for(int i = 0; i < size ; i++)
        {
            for(int j = 0; j < size ; j++)
            {
                if(isHappy(i,j))
-                   counter++;
+                   happyCounter++;
            }
        }
-       return (double) counter / (size * size); // cast double to value and shortened code
+       return (double) happyCounter / (size * size); // cast double to value and shortened code
     }
 
 
@@ -384,6 +384,13 @@ public class RedBlueGrid {
         return !(row < 0 || row >= size || col < 0 || col >= size);
     }
 
+    public int getNumOfRed () {
+        return counterRed;
+    }
+
+    public int getNumOfBlue () {
+        return counterBlue;
+    }
 }
 
 // for testing purposes
@@ -392,11 +399,11 @@ class Main {
         // test to check if the grid is configured properly
         RedBlueGrid test1 = new RedBlueGrid(8, 4, 0.2, 0.5, 0.3);
         double square = test1.size * test1.size;
-        double r =  Math.round((test1.counterRed / (0.8 * square))*10);
+        double r =  Math.round((test1.getNumOfRed() / (0.8 * square))*10);
         double red = r/10;
-        double b = Math.round((test1.counterBlue / (0.8 * square))*10);
+        double b = Math.round((test1.getNumOfBlue() / (0.8 * square))*10);
         double blue = b/10;
-        double v = Math.round(((square - (test1.counterRed + test1.counterRed))/square)*10);
+        double v = Math.round(((square - (test1.getNumOfRed() + test1.getNumOfRed()))/square)*10);
         double vacant = v/10;
         System.out.println(red);
         System.out.println(blue);
