@@ -152,8 +152,9 @@ public class RedBlueGridUI extends JFrame {
     }
 
     private void simulate() {
-        while (rbgrid.fractionHappy() != 1.0) {
+        while (rbgrid.fractionHappy() < 0.90) {
             rbgrid.simulate(SIMULATION_STEPS);
+            recolorUI();
             try {
                 Thread.sleep(25);
             }

@@ -160,81 +160,8 @@ public class RedBlueGrid {
      * @author dzhen2023
      */
     public boolean isHappy(int row, int col) {
-        if (row < 0 || col < 0 || row >= size || col >= size) {
-            throw new IllegalArgumentException("Invalid Grid Index");
-        }
-
         Color currentCellColor = getColor(row,col);
-        int cellCount = 0;
-        int sameCount = 0;
-        int topBound = -neighborhoodDistance;
-        int bottomBound = neighborhoodDistance;
-        int leftBound = -neighborhoodDistance;
-        int rightBound = neighborhoodDistance;
-
-        for (int i = 0; i <= rightBound; i++) {
-            if (col + i >= size) {
-                rightBound = i - 1;
-                break;
-            }
-            for (int j = -1; j >= topBound; j--) {
-                if (row + j < 0) {
-                    topBound = j + 1;
-                    break;
-                }
-                cellCount++;
-                if (getColor(row + j, col).equals(currentCellColor)) {
-                    sameCount++;
-                }
-            }
-
-            for (int j = 1; j <= bottomBound; j++) {
-                if (row + j >= size) {
-                    bottomBound = j - 1;
-                    break;
-                }
-                cellCount++;
-                if (getColor(row + j, col).equals(currentCellColor)) {
-                    sameCount++;
-                }
-            }
-
-            cellCount++;
-            if (getColor(row, col + i).equals(currentCellColor)) {
-                sameCount++;
-            }
-        }
-
-        for (int i = -1; i >= leftBound; i--) {
-            if (col + i < 0) {
-                leftBound = i + 1;
-                break;
-            }
-
-            for (int j = -1; j >= topBound; j--) {
-                cellCount++;
-                if (getColor(row + j,col).equals(currentCellColor)) {
-                    sameCount++;
-                }
-            }
-
-            for (int j = 1; j <= bottomBound; j++) {
-                cellCount++;
-                if (getColor(row + j,col).equals(currentCellColor)) {
-                    sameCount++;
-                }
-            }
-
-            cellCount++;
-            if (getColor(row, col + i).equals(currentCellColor)) {
-                sameCount++;
-            }
-        }
-
-        sameCount--;
-        cellCount--;
-
-        return ((double) sameCount / (double) cellCount) >= happinessThreshold;
+        return happinessCheck(row,col,currentCellColor);
     }
 
 
@@ -253,7 +180,7 @@ public class RedBlueGrid {
                    counter++;
            }
        }
-      frac = (double) counter / (size * size);
+      frac = (double) counter / (size * size); // cast double to value
        return frac;
     }
 
@@ -289,11 +216,135 @@ public class RedBlueGrid {
     }
 
 
-
-    // simulate multiple time steps
+    /**
+     * effects: simulates the RedBlueGrid in a non-randomized way
+     * @param numSteps is the number of times the Simulation will run
+     */
     public void simulate(int numSteps) {
+        for (int k = 0; k < numSteps; k++) {
+
+            List<Point> unhappyPeople = new ArrayList<>();
+            List<Point> vacant = new ArrayList<>();
+
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    if (grid[i][j].equals(COLORS[0])) {
+                        vacant.add(new Point(i, j));
+                    } else if (!isHappy(i, j)) {
+                        unhappyPeople.add(new Point(i, j));
+                    }
+                }
+            }
+
+            for (int i = 0; i < vacant.size(); i++) {
+                int vacantX = vacant.get(i).x;
+                int vacantY = vacant.get(i).y;
+
+                for (int j = 0; j < unhappyPeople.size(); j++) {
+                    int unhappyX = unhappyPeople.get(j).x;
+                    int unhappyY = unhappyPeople.get(j).y;
+
+                    if (happinessCheck(vacantX,vacantY,grid[unhappyX][unhappyY])) {
+                        grid[vacantX][vacantY] = grid[unhappyX][unhappyY];
+                        grid[unhappyX][unhappyY] = COLORS[0];
+
+                        break;
+                    }
+                }
+            }
+
+            vacant.clear();
+            unhappyPeople.clear();
+        }
+
 
     }
+
+    /**
+     * effects: checks specified cell if a colored cell would be happy there
+     * @param row is row index of grid
+     * @param col is column index of grid
+     * @param color is color to check happiness of
+     * @throws IllegalArgumentException when grid index is out of range
+     * @return if the color would be happy at specified row and col
+     */
+    private boolean happinessCheck(int row, int col, Color color) {
+        if (row < 0 || col < 0 || row >= size || col >= size) {
+            throw new IllegalArgumentException("Invalid Grid Index");
+        }
+
+        int cellCount = 0;
+        int sameCount = 0;
+        int topBound = -neighborhoodDistance;
+        int bottomBound = neighborhoodDistance;
+        int leftBound = -neighborhoodDistance;
+        int rightBound = neighborhoodDistance;
+
+        for (int i = 0; i <= rightBound; i++) {
+            if (col + i >= size) {
+                rightBound = i - 1;
+                break;
+            }
+            for (int j = -1; j >= topBound; j--) {
+                if (row + j < 0) {
+                    topBound = j + 1;
+                    break;
+                }
+                cellCount++;
+                if (getColor(row + j, col).equals(color)) {
+                    sameCount++;
+                }
+            }
+
+            for (int j = 1; j <= bottomBound; j++) {
+                if (row + j >= size) {
+                    bottomBound = j - 1;
+                    break;
+                }
+                cellCount++;
+                if (getColor(row + j, col).equals(color)) {
+                    sameCount++;
+                }
+            }
+
+            cellCount++;
+            if (getColor(row, col + i).equals(color)) {
+                sameCount++;
+            }
+        }
+
+        for (int i = -1; i >= leftBound; i--) {
+            if (col + i < 0) {
+                leftBound = i + 1;
+                break;
+            }
+
+            for (int j = -1; j >= topBound; j--) {
+                cellCount++;
+                if (getColor(row + j,col).equals(color)) {
+                    sameCount++;
+                }
+            }
+
+            for (int j = 1; j <= bottomBound; j++) {
+                cellCount++;
+                if (getColor(row + j,col).equals(color)) {
+                    sameCount++;
+                }
+            }
+
+            cellCount++;
+            if (getColor(row, col + i).equals(color)) {
+                sameCount++;
+            }
+        }
+
+        sameCount--;
+        cellCount--;
+
+        return ((double) sameCount / (double) cellCount) >= happinessThreshold;
+    }
+
 
 }
 
