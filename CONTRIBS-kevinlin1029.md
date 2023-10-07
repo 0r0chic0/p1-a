@@ -1,0 +1,3 @@
+- wrote setColor methoid;
+- wrote shiftColor method;
+- wrote test for task2;

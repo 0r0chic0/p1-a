@@ -1,15 +1,22 @@
 package erehwon;
 
-import java.awt.Color;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import  java.util.Random;
+import java.util.List;
 
 public class RedBlueGrid {
     private static final Color[] COLORS = {Color.WHITE, Color.RED, Color.BLUE};
     private Color[][] grid;
     private int neighborhoodDistance;
     private double happinessThreshold;
-    private int size;
+    public int size;
     private int cellsInNeighborhood;
+
+    public int counter1 = 0;
+
+    public int counter2 = 0;
 
     /**
     * Constructs n x n RedBlueGrid
@@ -52,7 +59,8 @@ public class RedBlueGrid {
             }
         }
 
-        for (int x = rng.nextInt(size), y = rng.nextInt(size); numberOfRed > 0 && numberOfBlue > 0;) {
+        for (int x = rng.nextInt(size), y = rng.nextInt(size); numberOfRed > 0 || numberOfBlue > 0;) //changed && to ||
+        {
            if (numberOfRed > 0) {
                while (!grid[y][x].equals(COLORS[0])) {
                    y = rng.nextInt(size);
@@ -60,14 +68,16 @@ public class RedBlueGrid {
                }
                grid[y][x] = COLORS[1];
                numberOfRed--;
+               counter1++;
            }
-           if (numberOfBlue > 0) {
+            if (numberOfBlue > 0) {
                while (!grid[y][x].equals(COLORS[0])) {
                    y = rng.nextInt(size);
                    x = rng.nextInt(size);
                }
                grid[y][x] = COLORS[2];
                numberOfBlue--;
+               counter2++;
            }
         }
     }
@@ -235,14 +245,55 @@ public class RedBlueGrid {
 
     // what fraction of the erehwon residents are happy?
     public double fractionHappy() {
-        // TODO: Implement this method
-        return -1;
+        int counter = 0;
+        double frac = 0;
+       for(int i = 0; i < size ; i++)
+       {
+           for(int j = 0; j < size ; j++)
+           {
+               if(isHappy(i,j))
+                   counter++;
+           }
+       }
+      frac = counter / (size * size);
+       return frac;
     }
+    /**
+     * @return frac which is the fraction of happy residents
+     * @author 0r0chic0
+     */
 
     // simulate exactly one time step of movement
     public void oneTimeStep() {
-        // TODO: Implement this method
+        //use point class to store coordinates of cells;
+        List<Point> unhappyPeople = new ArrayList<>();
+        List<Point> vacant = new ArrayList<>();
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (grid[i][j].equals(COLORS[0])) {
+                    vacant.add(new Point(i, j));  //identify vancant cells
+                } else if (!isHappy(i, j)) {
+                    unhappyPeople.add(new Point(i, j)); //identify unhappy people
+                }
+            }
+        }
+
+        // ensures that the movement of unhappy people to vacant cells is done in a randomized manner.
+        Collections.shuffle(unhappyPeople);
+        //compare which one is the minimum
+        int mini = Math.min(vacant.size(), unhappyPeople.size());
+
+        for (int i = 0; i < mini; i++) {
+            Point origin = unhappyPeople.get(i);
+            Point empty = vacant.get(i);
+
+            grid[empty.x][empty.y] = grid[origin.x][origin.y]; // Move  person to the empty cell
+            grid[origin.x][origin.y] = COLORS[0]; // Set the original cell to vacant after moving people
+        }
     }
+
+
 
     // simulate multiple time steps
     public void simulate(int numSteps) {
@@ -254,8 +305,41 @@ public class RedBlueGrid {
 // for testing purposes
 class Main {
     public static void main (String[] args) {
+        // test to check if the grid is configured properly
+        RedBlueGrid test1 = new RedBlueGrid(8, 4, 0.2, 0.5, 0.3);
+        double square = test1.size * test1.size;
+        double r =  Math.round((test1.counter1 / (0.8 * square))*10);
+        double red = r/10;
+        double b = Math.round((test1.counter2 / (0.8 * square))*10);
+        double blue = b/10;
+        double v = Math.round(((square - (test1.counter1 + test1.counter2))/square)*10);
+        double vacant = v/10;
+        System.out.println(red);
+        System.out.println(blue);
+        System.out.println(vacant);
+        System.out.println((test1.size) * (test1.size));
+        if (red == 0.5 && blue == 0.5 && vacant == 0.2) {
+            System.out.println("True");
+        }
+        else {
+            System.out.println("False");
+        }
+        //test for 2nd task
+        RedBlueGrid test2 = new RedBlueGrid(10, 2, 0.3, 0.6, 0.4);
 
-        RedBlueGrid test1 = new RedBlueGrid(8,4,0.2,0.5,0.3);
+        // shiftColor method test
+        System.out.println("At the beginning: color at (3,4): " + test2.getColor(3, 4));
+        test2.shiftColor(3, 4);
+        System.out.println("Color at (3,4) through 1st shift: " + test2.getColor(3, 4));
+        test2.shiftColor(3, 4);
+        System.out.println("Color at (3,4) through 2nd shift: " + test2.getColor(3, 4));
+        test2.shiftColor(3, 4);
+        System.out.println("Color at (3,4) through 3rd shift: " + test2.getColor(3, 4));
+
+        //  reset method test
+        // 60% vacant; 30% red; 0.5 for happinessThreshold
+        test2.reset(0.6, 0.3, 0.5);
+        System.out.println("Color at (3,4) through reset: " + test2.getColor(3, 4));
 
     }
 }
