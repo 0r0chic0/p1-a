@@ -12,7 +12,6 @@ public class RedBlueGrid {
     private int neighborhoodDistance;
     private double happinessThreshold;
     public int size;
-    private int cellsInNeighborhood;
 
     public int counter1 = 0;
 
@@ -238,12 +237,11 @@ public class RedBlueGrid {
         return ((double) sameCount / (double) cellCount) >= happinessThreshold;
     }
 
-    /**
-     * @return true if color at index is the same as input color
-     * @author dzhen2023
-     */
 
-    // what fraction of the erehwon residents are happy?
+    /**
+     * @return frac which is the fraction of happy residents
+     * @author 0r0chic0
+     */
     public double fractionHappy() {
         int counter = 0;
         double frac = 0;
@@ -255,13 +253,10 @@ public class RedBlueGrid {
                    counter++;
            }
        }
-      frac = counter / (size * size);
+      frac = (double) counter / (size * size);
        return frac;
     }
-    /**
-     * @return frac which is the fraction of happy residents
-     * @author 0r0chic0
-     */
+
 
     // simulate exactly one time step of movement
     public void oneTimeStep() {
@@ -297,7 +292,7 @@ public class RedBlueGrid {
 
     // simulate multiple time steps
     public void simulate(int numSteps) {
-        // TODO: Implement this method
+
     }
 
 }
