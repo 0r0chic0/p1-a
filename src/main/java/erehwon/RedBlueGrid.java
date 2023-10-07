@@ -187,8 +187,8 @@ public class RedBlueGrid {
      * @author  dzhen2023
      */
     public boolean isHappy(int row, int col) {
-        Color currentCellColor = getColor(row,col);
-        return happinessCheck(row,col,currentCellColor);
+        Color colorAtCell = getColor(row,col);
+        return happinessCheck(row,col,colorAtCell);
     }
 
 
