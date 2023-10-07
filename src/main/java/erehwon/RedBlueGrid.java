@@ -11,9 +11,8 @@ public class RedBlueGrid {
     private Color[][] grid;
     private final int neighborhoodDistance;
     private double happinessThreshold;
-    public final int size;
+    private final int size;
     private int counterRed = 0; // changed name
-
     private int counterBlue = 0; // changed name
 
     /**
@@ -42,9 +41,9 @@ public class RedBlueGrid {
         this.happinessThreshold = happinessThreshold;
         this.neighborhoodDistance = neighborhoodDistance;
         this.size = size;
-        randomizeGrid(fractionVacant,fractionRed);
-        }
 
+        randomizeGrid(fractionVacant, fractionRed);
+    }
 
     /**
      * Randomizes grid cell colors with specified inputs.
@@ -54,39 +53,38 @@ public class RedBlueGrid {
      *                      requires fractionRed >= 0
      * @author  dzhen2023
      */
-    private void randomizeGrid (double fractionVacant, double fractionRed) {
-        int numberOfVacant = (int) (((double)(size*size)) * fractionVacant);
-        int numberOfNonVacant = (size*size) - numberOfVacant;
+    private void randomizeGrid(double fractionVacant, double fractionRed) {
+        int numberOfVacant = (int) (((double) (size * size)) * fractionVacant);
+        int numberOfNonVacant = (size * size) - numberOfVacant;
         int numberOfRed = (int) (((double) numberOfNonVacant) * fractionRed);
         int numberOfBlue = numberOfNonVacant - numberOfRed;
         Random rng = new Random();
 
-        for (int i=0; i < size; i++) {
-            for (int j=0; j < size; j++) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 grid[i][j] = COLORS[0];
             }
         }
 
-        for (int x = rng.nextInt(size), y = rng.nextInt(size); numberOfRed > 0 || numberOfBlue > 0;) //changed && to ||
-        {
-           if (numberOfRed > 0) {
-               while (!grid[y][x].equals(COLORS[0])) {
-                   y = rng.nextInt(size);
-                   x = rng.nextInt(size);
-               }
-               grid[y][x] = COLORS[1];
-               numberOfRed--;
-               counterRed++;
-           }
+        for (int x = rng.nextInt(size), y = rng.nextInt(size); numberOfRed > 0 || numberOfBlue > 0;) {
+            if (numberOfRed > 0) {
+                while (!grid[y][x].equals(COLORS[0])) {
+                    y = rng.nextInt(size);
+                    x = rng.nextInt(size);
+                }
+                grid[y][x] = COLORS[1];
+                numberOfRed--;
+                counterRed++;
+            }
             if (numberOfBlue > 0) {
-               while (!grid[y][x].equals(COLORS[0])) {
-                   y = rng.nextInt(size);
-                   x = rng.nextInt(size);
-               }
-               grid[y][x] = COLORS[2];
-               numberOfBlue--;
-               counterBlue++;
-           }
+                while (!grid[y][x].equals(COLORS[0])) {
+                    y = rng.nextInt(size);
+                    x = rng.nextInt(size);
+                }
+                grid[y][x] = COLORS[2];
+                numberOfBlue--;
+                counterBlue++;
+            }
         }
     }
 
@@ -99,14 +97,13 @@ public class RedBlueGrid {
      * @author  0r0chic0
      */
     public Color getColor(int row, int col) {
-        if(!withinBounds(row,col))
-       {
-           throw new IllegalArgumentException("Out of Bounds");
-       }
-       else {
-           return grid[row][col];
-       }
+        if (!withinBounds(row, col)) {
+            throw new IllegalArgumentException("Out of Bounds");
+        } else {
+            return grid[row][col];
+        }
     }
+
 
     /**
      * Changes color of specified cell.
@@ -117,19 +114,22 @@ public class RedBlueGrid {
      * @author  kevinlin1029
      */
     public boolean setColor(int row, int col, Color color) {
-        if (!withinBounds(row, col))
+        if (!withinBounds(row, col)) {
             return false;
+        }
 
         boolean isValidColor = false;
 
         //this for loop is to check whether the color is valid
-        for (Color validColor: COLORS){
-            if (color.equals(validColor)){
+        for (Color validColor: COLORS) {
+            if (color.equals(validColor)) {
                 isValidColor = true;
                 break;
             }
         }
-        if (!isValidColor){return false;}
+        if (!isValidColor) {
+            return false;
+        }
 
         grid[row][col] = color; //if the color is valid, set the color into cell
 
@@ -146,19 +146,19 @@ public class RedBlueGrid {
      * @author  kevinlin1029
      */
     public void shiftColor(int row, int col) {
-        if (!withinBounds(row,col)) {
+        if (!withinBounds(row, col)) {
             throw new IllegalArgumentException("Out of Bounds");
         }
 
         Color currentColor = grid[row][col];
 
         // find the next color
-        if (currentColor.equals(Color.WHITE)) {
-            grid[row][col] = Color.RED;
-        } else if (currentColor.equals(Color.RED)) {
-            grid[row][col] = Color.BLUE;
-        } else if (currentColor.equals(Color.BLUE)) {
-            grid[row][col] = Color.WHITE;
+        if (currentColor.equals(COLORS[0])) {
+            grid[row][col] = COLORS[1];
+        } else if (currentColor.equals(COLORS[1])) {
+            grid[row][col] = COLORS[2];
+        } else if (currentColor.equals(COLORS[2])) {
+            grid[row][col] = COLORS[0];
         }
     }
 
@@ -176,7 +176,7 @@ public class RedBlueGrid {
                       double fractionRed,
                       double happinessThreshold) {
         this.happinessThreshold = happinessThreshold;
-        randomizeGrid(fractionVacant,fractionRed);
+        randomizeGrid(fractionVacant, fractionRed);
     }
 
     /**
@@ -187,8 +187,8 @@ public class RedBlueGrid {
      * @author  dzhen2023
      */
     public boolean isHappy(int row, int col) {
-        Color colorAtCell = getColor(row,col);
-        return happinessCheck(row,col,colorAtCell);
+        Color colorAtCell = getColor(row, col);
+        return happinessCheck(row, col, colorAtCell);
     }
 
 
@@ -198,15 +198,16 @@ public class RedBlueGrid {
      */
     public double fractionHappy() {
         int happyCounter = 0;
-       for(int i = 0; i < size ; i++)
-       {
-           for(int j = 0; j < size ; j++)
-           {
-               if(isHappy(i,j))
-                   happyCounter++;
-           }
-       }
-       return (double) happyCounter / (size * size); // cast double to value and shortened code
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (isHappy(i, j)) {
+                    happyCounter++;
+                }
+            }
+        }
+
+        return (double) happyCounter / (size * size);
     }
 
 
@@ -273,7 +274,7 @@ public class RedBlueGrid {
                     int unhappyX = unhappyPeople.get(j).x;
                     int unhappyY = unhappyPeople.get(j).y;
 
-                    if (happinessCheck(vacantX,vacantY,grid[unhappyX][unhappyY])) {
+                    if (happinessCheck(vacantX, vacantY, grid[unhappyX][unhappyY])) {
                         grid[vacantX][vacantY] = grid[unhappyX][unhappyY];
                         grid[unhappyX][unhappyY] = COLORS[0];
 
@@ -351,14 +352,14 @@ public class RedBlueGrid {
 
             for (int j = -1; j >= topBound; j--) {
                 cellCount++;
-                if (getColor(row + j,col).equals(color)) {
+                if (getColor(row + j, col).equals(color)) {
                     sameCount++;
                 }
             }
 
             for (int j = 1; j <= bottomBound; j++) {
                 cellCount++;
-                if (getColor(row + j,col).equals(color)) {
+                if (getColor(row + j, col).equals(color)) {
                     sameCount++;
                 }
             }
@@ -380,16 +381,20 @@ public class RedBlueGrid {
      * @param col: column index of grid
      * @return if row or column index is out of bounds
      */
-    private boolean withinBounds (int row, int col) {
+    private boolean withinBounds(int row, int col) {
         return !(row < 0 || row >= size || col < 0 || col >= size);
     }
 
-    public int getNumOfRed () {
+    public int getNumOfRed() {
         return counterRed;
     }
 
-    public int getNumOfBlue () {
+    public int getNumOfBlue() {
         return counterBlue;
+    }
+
+    public int getSize() {
+        return size;
     }
 }
 
@@ -398,7 +403,7 @@ class Main {
     public static void main (String[] args) {
         // test to check if the grid is configured properly
         RedBlueGrid test1 = new RedBlueGrid(8, 4, 0.2, 0.5, 0.3);
-        double square = test1.size * test1.size;
+        double square = test1.getSize() * test1.getSize();
         double r =  Math.round((test1.getNumOfRed() / (0.8 * square))*10);
         double red = r/10;
         double b = Math.round((test1.getNumOfBlue() / (0.8 * square))*10);
@@ -408,7 +413,7 @@ class Main {
         System.out.println(red);
         System.out.println(blue);
         System.out.println(vacant);
-        System.out.println((test1.size) * (test1.size));
+        System.out.println((test1.getSize()) * (test1.getSize()));
         if (red == 0.5 && blue == 0.5 && vacant == 0.2) {
             System.out.println("True");
         }
