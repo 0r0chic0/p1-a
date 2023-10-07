@@ -2,3 +2,6 @@
 - Wrote reset method
 - Wrote isHappy method
 - Wrote first implementation of simulate method
+- Wrote javadoc comments and specs
+- Abstracted some operations
+- Formatted code to follow style guide
