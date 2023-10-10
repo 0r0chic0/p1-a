@@ -100,6 +100,7 @@ public class StarterTests {
         grid1.setColor(1,1,Color.RED);
         assertFalse(grid1.isHappy(1,1));
         assertFalse(grid1.isHappy(0,0));
+        assertFalse(grid1.isHappy(2,2));
 
         // checks when neighborhoodDistance is out of bounds
         RedBlueGrid grid2 = new RedBlueGrid(3,2,0,0,1);
@@ -113,6 +114,7 @@ public class StarterTests {
         grid1.setColor(0,2,Color.RED);
         grid1.setColor(1,0,Color.RED);
         assertTrue(grid3.isHappy(1,1));
+        assertTrue(grid3.isHappy(2,2));
 
 
     }
