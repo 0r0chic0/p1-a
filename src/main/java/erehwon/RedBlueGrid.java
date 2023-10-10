@@ -319,27 +319,10 @@ public class RedBlueGrid {
                 rightBound = i - 1;
                 break;
             }
-            for (int j = -1; j >= topBound; j--) {
-                if (!withinBounds(row + j, col + i)) {
-                    topBound = j + 1;
-                    break;
-                }
-                cellCount++;
-                if (getColor(row + j, col + i).equals(colorToCheck)) {
-                    sameCount++;
-                }
-            }
 
-            for (int j = 1; j <= bottomBound; j++) {
-                if (!withinBounds(row + j, col + i)) {
-                    bottomBound = j - 1;
-                    break;
-                }
-                cellCount++;
-                if (getColor(row + j, col + i).equals(colorToCheck)) {
-                    sameCount++;
-                }
-            }
+            int[] counts = verticalCount(row, col + i, bottomBound, topBound, colorToCheck);
+            cellCount += counts[0];
+            sameCount += counts[1];
 
             if (i != 0) {
                 cellCount++;
@@ -355,19 +338,9 @@ public class RedBlueGrid {
                 break;
             }
 
-            for (int j = -1; j >= topBound; j--) {
-                cellCount++;
-                if (getColor(row + j, col + i).equals(colorToCheck)) {
-                    sameCount++;
-                }
-            }
-
-            for (int j = 1; j <= bottomBound; j++) {
-                cellCount++;
-                if (getColor(row + j, col + i).equals(colorToCheck)) {
-                    sameCount++;
-                }
-            }
+            int[] counts = verticalCount(row, col + i, bottomBound, topBound, colorToCheck);
+            cellCount += counts[0];
+            sameCount += counts[1];
 
             cellCount++;
             if (getColor(row, col + i).equals(colorToCheck)) {
@@ -378,6 +351,42 @@ public class RedBlueGrid {
         return ((double) sameCount / (double) cellCount) >= happinessThreshold;
     }
 
+    /**
+     *
+     * @param row:  specified starting row index
+     * @param col:  specified column index
+     * @param bottomBound   bottom boundary of ideal neighborhood
+     * @param topBound:     top boundary of ideal neighborhood
+     * @param colorToCheck:  color of cell at center of neighborhood
+     * @return  array that contains the number of cells and same color cells in the neighborhood column
+     * @author  dzhen2023
+     */
+    private int[] verticalCount(int row, int col, int bottomBound, int topBound, Color colorToCheck) {
+        int cellCount = 0;
+        int sameCount = 0;
+
+        for (int j = -1; j >= topBound; j--) {
+            if (!withinBounds(row + j, col)) {
+                break;
+            }
+            cellCount++;
+            if (getColor(row + j, col).equals(colorToCheck)) {
+                sameCount++;
+            }
+        }
+
+        for (int j = 1; j <= bottomBound; j++) {
+            if (!withinBounds(row + j, col)) {
+                break;
+            }
+            cellCount++;
+            if (getColor(row + j, col).equals(colorToCheck)) {
+                sameCount++;
+            }
+        }
+
+        return new int[] {cellCount, sameCount, topBound, bottomBound};
+    }
 
     /**
      * @param row: row index of grid
