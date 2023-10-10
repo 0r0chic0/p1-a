@@ -291,13 +291,13 @@ public class RedBlueGrid {
     }
 
     /**
-     * effects: checks specified cell if a colored cell would be happy there
-     * @param row is row index of grid
-     * @param col is column index of grid
-     * @param color is color to check happiness of
+     * Checks specified cell if a colored cell would be happy there
+     * @param row:  row index of grid
+     * @param col:  column index of grid
+     * @param color:    color to check happiness of
      * @throws IllegalArgumentException when grid index is out of range
-     * @return if the color would be happy at specified row and col
-     * @author dzhen2023
+     * @return  if the color would be happy at specified row and col
+     * @author  dzhen2023
      */
     private boolean happinessCheck(int row, int col, Color color) {
         if (!withinBounds(row, col)) {
