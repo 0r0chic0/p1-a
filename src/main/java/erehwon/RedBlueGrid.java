@@ -57,32 +57,33 @@ public class RedBlueGrid {
         int numberOfRed = (int) Math.round(((double) numberOfNonVacant) * fractionRed);
         int numberOfBlue = numberOfNonVacant - numberOfRed;
         Random rng = new Random();
+        List<Point> whiteSpace = new ArrayList<>();
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 grid[i][j] = COLORS[0];
+                whiteSpace.add(new Point(i,j));
             }
         }
 
+        Collections.shuffle(whiteSpace);
         counterBlue = 0;
         counterRed = 0;
 
-        for (int x = rng.nextInt(size), y = rng.nextInt(size); numberOfRed > 0 || numberOfBlue > 0;) {
+        for (int x,y; numberOfRed > 0 || numberOfBlue > 0;) {
             if (numberOfRed > 0) {
-                while (!grid[y][x].equals(COLORS[0])) {
-                    y = rng.nextInt(size);
-                    x = rng.nextInt(size);
-                }
-                grid[y][x] = COLORS[1];
+                x = whiteSpace.get(0).x;
+                y = whiteSpace.get(0).y;
+                grid[x][y] = COLORS[1];
                 numberOfRed--;
+                whiteSpace.remove(0);
                 counterRed++;
             }
             if (numberOfBlue > 0) {
-                while (!grid[y][x].equals(COLORS[0])) {
-                    y = rng.nextInt(size);
-                    x = rng.nextInt(size);
-                }
+                x = whiteSpace.get(0).x;
+                y = whiteSpace.get(0).y;
                 grid[y][x] = COLORS[2];
+                whiteSpace.remove(0);
                 numberOfBlue--;
                 counterBlue++;
             }
