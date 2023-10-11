@@ -9,27 +9,24 @@ import java.util.List;
 public class RedBlueGrid {
     private static final Color[] COLORS = {Color.WHITE, Color.RED, Color.BLUE};
     private Color[][] grid;
-    private final int neighborhoodDistance;
+    private int neighborhoodDistance;
     private double happinessThreshold;
-    private final int size;
-    private int counterRed; // changed name
-    private int counterBlue; // changed name
+    public int size;
+    private int cellsInNeighborhood;
+
+    public int counter1 = 0;
+
+    public int counter2 = 0;
 
     /**
-    * Constructs n x n RedBlueGrid.
+    * Constructs n x n RedBlueGrid
     * Vacant cells are white
      * if fractions result in non integer values then they will be rounded down
-    * @param size:  number of rows and columns to initialize grid with;
-     *              requires size > 0
-    * @param neighborhoodDistance:  number of steps in any direction around a cell for
-     *                              another cell to be considered in the neighborhood;
-     *                              requires neighborhoodDistance >= 1
-    * @param fractionVacant:    the fraction of vacant (white) cells in the grid;
-     *                          requires fractionVacant >= 0 and fractionVacant <= 1
-    * @param fractionRed:   the fraction of non-vacant (not white) red cells in the grid
-     *                      requires fractionRed >= 0 and fractionRed <= 1
-    * @param happinessThreshold:    the fraction of same color cells in the neighborhood of a cell to attain happiness;
-     *                              requires happinessThreshold >= 0 and happinessThreshold <= 1
+    * @param size is size of constructed grid
+    * @param neighborhoodDistance is steps need to reach a cell within the neighborhood
+    * @param fractionVacant is percentage of vacant cells in grid
+    * @param fractionRed is percentage of non-vacant cells that are red in grid
+    * @param happinessThreshold: percentage of same color cells in the neighborhood for a cell to attain happiness, > 0
     * @author dzhen2023
     */
     public RedBlueGrid(int size,
@@ -41,183 +38,238 @@ public class RedBlueGrid {
         this.happinessThreshold = happinessThreshold;
         this.neighborhoodDistance = neighborhoodDistance;
         this.size = size;
-
-        randomizeGrid(fractionVacant, fractionRed);
-    }
+        randomizeGrid(fractionVacant,fractionRed);
+        }
 
     /**
-     * Randomizes grid cell colors with specified inputs.
-     * @param fractionVacant:   fraction of vacant (white) cells the grid is to have;
-     *                          requires fractionVacant >= 0 and fractionVacant <= 1
-     * @param fractionRed:  fraction of non-vacant red cells the grid is to have;
-     *                      requires fractionRed >= 0 and fractionRed <= 1
-     * @author  dzhen2023
+     * effects: changes grid colors with given values
+     * @param fractionVacant is percentage of vacant cells in grid
+     * @param fractionRed is percentage of non-vacant cells that are red in grid
      */
-    private void randomizeGrid(double fractionVacant, double fractionRed) {
-        int numberOfVacant = (int) Math.round(((double) (size * size)) * fractionVacant);
-        int numberOfNonVacant = (size * size) - numberOfVacant;
-        int numberOfRed = (int) Math.round(((double) numberOfNonVacant) * fractionRed);
+    private void randomizeGrid (double fractionVacant, double fractionRed) {
+        int numberOfVacant = (int) (((double)(size*size)) * fractionVacant);
+        int numberOfNonVacant = (size*size) - numberOfVacant;
+        int numberOfRed = (int) (((double) numberOfNonVacant) * fractionRed);
         int numberOfBlue = numberOfNonVacant - numberOfRed;
         Random rng = new Random();
 
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
+        for (int i=0; i < size; i++) {
+            for (int j=0; j < size; j++) {
                 grid[i][j] = COLORS[0];
             }
         }
 
-        counterBlue = 0;
-        counterRed = 0;
-
-        for (int x = rng.nextInt(size), y = rng.nextInt(size); numberOfRed > 0 || numberOfBlue > 0;) {
-            if (numberOfRed > 0) {
-                while (!grid[y][x].equals(COLORS[0])) {
-                    y = rng.nextInt(size);
-                    x = rng.nextInt(size);
-                }
-                grid[y][x] = COLORS[1];
-                numberOfRed--;
-                counterRed++;
-            }
+        for (int x = rng.nextInt(size), y = rng.nextInt(size); numberOfRed > 0 || numberOfBlue > 0;) //changed && to ||
+        {
+           if (numberOfRed > 0) {
+               while (!grid[y][x].equals(COLORS[0])) {
+                   y = rng.nextInt(size);
+                   x = rng.nextInt(size);
+               }
+               grid[y][x] = COLORS[1];
+               numberOfRed--;
+               counter1++;
+           }
             if (numberOfBlue > 0) {
-                while (!grid[y][x].equals(COLORS[0])) {
-                    y = rng.nextInt(size);
-                    x = rng.nextInt(size);
-                }
-                grid[y][x] = COLORS[2];
-                numberOfBlue--;
-                counterBlue++;
-            }
+               while (!grid[y][x].equals(COLORS[0])) {
+                   y = rng.nextInt(size);
+                   x = rng.nextInt(size);
+               }
+               grid[y][x] = COLORS[2];
+               numberOfBlue--;
+               counter2++;
+           }
         }
     }
 
     /**
-     * Gets color of a specified cell.
-     * @param row:  row index of the grid
-     * @param col:  column index of the grid
-     * @return  color at specified grid (Red, Blue, or White)
-     * @throws  IllegalArgumentException when row and column index are out of bounds
-     * @author  0r0chic0
+     * effects: changes grid colors with given values
+     * @param row: row index of grid
+     * @param col: column index of grid
+     * @returns grid[row][col] which is the color of the grid mentioned by the indices.
+     * @author 0r0chic0
      */
     public Color getColor(int row, int col) {
-        if (!withinBounds(row, col)) {
-            throw new IllegalArgumentException("Out of Bounds");
-        } else {
-            return grid[row][col];
-        }
+        if(row < 0 || row > grid.length || col < 0 || col > grid.length)
+       {
+           throw new IllegalArgumentException("Invalid Grid Values");
+       }
+       else {
+           return grid[row][col];
+       }
     }
 
-
-    /**
-     * Changes color of specified cell.
-     * @param row:  row index of the grid
-     * @param col:  column index of the grid
-     * @param color:    color to be changed to
-     * @return  if color change is successful
-     * @author  kevinlin1029
-     */
+    // can only set a valid colour for this project
+    // do nothing for cells that are not on the grid
+    // this method may violate the fractional allocation
+    // of space but we are still implementing it
     public boolean setColor(int row, int col, Color color) {
-        if (!withinBounds(row, col)) {
+
+        //check the grid's boundary
+        if (row < 0 || row >= grid.length || col < 0 || col >= grid[0].length) {
             return false;
         }
 
-        boolean isValidColor = false;
+        boolean checkColorValidity = false;
 
         //this for loop is to check whether the color is valid
-        for (Color validColor: COLORS) {
-            if (color.equals(validColor)) {
-                isValidColor = true;
+        for (Color key: COLORS){
+            if (color.equals(key)){
+                checkColorValidity = true;
                 break;
             }
         }
-        if (!isValidColor) {
-            return false;
-        }
+        if (!checkColorValidity){return false;}
 
         grid[row][col] = color; //if the color is valid, set the color into cell
 
         return true; // you may need to change this
     }
 
-
-
-    /**
-     * Rotates a cell's color by this order: WHITE -> RED -> BLUE -> WHITE.
-     * @param row:  row index of grid
-     * @param col:  column index of grid
-     * @throws IllegalArgumentException when row and column index are out of bounds
-     * @author  kevinlin1029
-     */
+    // for rotating through the colours in the order
+    // WHITE -> RED -> BLUE -> WHITE -> ...
     public void shiftColor(int row, int col) {
-        if (!withinBounds(row, col)) {
-            throw new IllegalArgumentException("Out of Bounds");
+        if (row < 0 || row >= grid.length || col < 0 || col >= grid[0].length) {
+            return; // Out of  boundaries
         }
 
         Color currentColor = grid[row][col];
 
         // find the next color
-        if (currentColor.equals(COLORS[0])) {
-            grid[row][col] = COLORS[1];
-        } else if (currentColor.equals(COLORS[1])) {
-            grid[row][col] = COLORS[2];
-        } else if (currentColor.equals(COLORS[2])) {
-            grid[row][col] = COLORS[0];
+        if (currentColor.equals(Color.WHITE)) {
+            grid[row][col] = Color.RED;
+        } else if (currentColor.equals(Color.RED)) {
+            grid[row][col] = Color.BLUE;
+        } else if (currentColor.equals(Color.BLUE)) {
+            grid[row][col] = Color.WHITE;
         }
     }
 
     /**
-     * Randomize grid colors and cell happiness threshold with desired inputs.
-     * @param fractionVacant:   fraction of vacant (white) cells for grid to have;
-     *                          requires fractionVacant >= 0 and fractionVacant <= 1
-     * @param fractionRed:  fraction of red cells for grid to have;
-     *                      requires fractionRed >= 0 and fractionRed <= 1
-     * @param happinessThreshold:   new happinessThreshold;
-     *                              requires happinessThreshold >= 0 and happinessThreshold <= 1
-     * @author  dzhen2023
+     *
+     * @param fractionVacant: fraction of vacant cells to mutate grid with
+     * @param fractionRed: fraction of red cells to mutate grid with
+     * @param happinessThreshold: new happinessThreshold
+     * @author dzhen2023
      */
     public void reset(double fractionVacant,
                       double fractionRed,
                       double happinessThreshold) {
         this.happinessThreshold = happinessThreshold;
-        randomizeGrid(fractionVacant, fractionRed);
+        randomizeGrid(fractionVacant,fractionRed);
     }
 
     /**
+     *
      * @param row: row index of grid
-     * @param col: column index of grid
-     * @return  if resident at specified cell is happy
-     * @throws  IllegalArgumentException if specified index is out of bounds
-     * @author  dzhen2023
+     * @param col: col index of grid
+     * @return if the resident at specified cell is happy, throws illegalArgumentException if out of bounds
+     * @author dzhen2023
      */
     public boolean isHappy(int row, int col) {
-        Color colorAtCell = getColor(row, col);
-        return happinessCheck(row, col, colorAtCell);
-    }
+        if (row < 0 || col < 0 || row >= grid.length || col >= grid[0].length) {
+            throw new IllegalArgumentException("Invalid Grid Index");
+        }
 
+        Color currentCellColor = getColor(row,col);
+        int cellCount = 0;
+        int sameCount = 0;
+        int topBound = -neighborhoodDistance;
+        int bottomBound = neighborhoodDistance;
+        int leftBound = -neighborhoodDistance;
+        int rightBound = neighborhoodDistance;
 
-    /**
-     * @return  fraction of happy residents
-     * @author  0r0chic0
-     */
-    public double fractionHappy() {
-        int happyCounter = 0;
-
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                if (isHappy(i, j)) {
-                    happyCounter++;
+        for (int i = 0; i <= rightBound; i++) {
+            if (col + i >= grid[0].length) {
+                rightBound = i - 1;
+                break;
+            }
+            for (int j = -1; j >= topBound; j--) {
+                if (row + j < 0) {
+                    topBound = j + 1;
+                    break;
                 }
+                cellCount++;
+                if (getColor(row + j, col).equals(currentCellColor)) {
+                    sameCount++;
+                }
+            }
+
+            for (int j = 1; j <= bottomBound; j++) {
+                if (row + j >= grid.length) {
+                    bottomBound = j - 1;
+                    break;
+                }
+                cellCount++;
+                if (getColor(row + j, col).equals(currentCellColor)) {
+                    sameCount++;
+                }
+            }
+
+            cellCount++;
+            if (getColor(row, col + i).equals(currentCellColor)) {
+                sameCount++;
             }
         }
 
-        return (double) happyCounter / (size * size);
+        for (int i = -1; i >= leftBound; i--) {
+            if (col + i < 0) {
+                leftBound = i + 1;
+                break;
+            }
+
+            for (int j = -1; j >= topBound; j--) {
+                cellCount++;
+                if (getColor(row + j,col).equals(currentCellColor)) {
+                    sameCount++;
+                }
+            }
+
+            for (int j = 1; j <= bottomBound; j++) {
+                cellCount++;
+                if (getColor(row + j,col).equals(currentCellColor)) {
+                    sameCount++;
+                }
+            }
+
+            cellCount++;
+            if (getColor(row, col + i).equals(currentCellColor)) {
+                sameCount++;
+            }
+        }
+
+        sameCount--;
+        cellCount--;
+
+        return ((double) sameCount / (double) cellCount) >= happinessThreshold;
     }
 
-
     /**
-     * Moves unhappy residents to vacant (white) cells randomly in one time step.
-     * @author kevinlin1029
+     * @return true if color at index is the same as input color
+     * @author dzhen2023
      */
+
+    // what fraction of the erehwon residents are happy?
+    public double fractionHappy() {
+        int counter = 0;
+        double frac = 0;
+       for(int i = 0; i < size ; i++)
+       {
+           for(int j = 0; j < size ; j++)
+           {
+               if(isHappy(i,j))
+                   counter++;
+           }
+       }
+      frac = counter / (size * size);
+       return frac;
+    }
+    /**
+     * @return frac which is the fraction of happy residents
+     * @author 0r0chic0
+     */
+
+    // simulate exactly one time step of movement
     public void oneTimeStep() {
         //use point class to store coordinates of cells;
         List<Point> unhappyPeople = new ArrayList<>();
@@ -248,193 +300,30 @@ public class RedBlueGrid {
     }
 
 
-    /**
-     * Simulates the RedBlueGrid in a non-randomized way
-     * @param numSteps:     number of time steps the simulation will run for
-     * @author  dzhen2023
-     */
+
+    // simulate multiple time steps
     public void simulate(int numSteps) {
-        for (int k = 0; k < numSteps; k++) {
-
-            List<Point> unhappyPeople = new ArrayList<>();
-            List<Point> vacant = new ArrayList<>();
-
-            for (int i = 0; i < size; i++) {
-                for (int j = 0; j < size; j++) {
-                    if (grid[i][j].equals(COLORS[0])) {
-                        vacant.add(new Point(i, j));
-                    } else if (!isHappy(i, j)) {
-                        unhappyPeople.add(new Point(i, j));
-                    }
-                }
-            }
-
-            for (int i = 0; i < vacant.size(); i++) {
-                int vacantX = vacant.get(i).x;
-                int vacantY = vacant.get(i).y;
-
-                for (int j = 0; j < unhappyPeople.size(); j++) {
-                    int unhappyX = unhappyPeople.get(j).x;
-                    int unhappyY = unhappyPeople.get(j).y;
-
-                    if (happinessCheck(vacantX, vacantY, grid[unhappyX][unhappyY])) {
-                        grid[vacantX][vacantY] = grid[unhappyX][unhappyY];
-                        grid[unhappyX][unhappyY] = COLORS[0];
-
-                        break;
-                    }
-                }
-            }
-
-            vacant.clear();
-            unhappyPeople.clear();
-        }
-
-
+        // TODO: Implement this method
     }
 
-    /**
-     * Checks specified cell if a colored cell would be happy there
-     * @param row:  row index of grid
-     * @param col:  column index of grid
-     * @param colorToCheck:    color to check happiness of
-     * @throws IllegalArgumentException when grid index is out of range
-     * @return  if the color would be happy at specified row and col
-     * @author  dzhen2023
-     */
-    private boolean happinessCheck(int row, int col, Color colorToCheck) {
-        if (!withinBounds(row, col)) {
-            throw new IllegalArgumentException("Out of Bounds");
-        }
-
-        int cellCount = 0;
-        int sameCount = 0;
-        int topBound = -neighborhoodDistance;
-        int bottomBound = neighborhoodDistance;
-        int leftBound = -neighborhoodDistance;
-        int rightBound = neighborhoodDistance;
-
-        for (int i = 0; i <= rightBound; i++) {
-            if (!withinBounds(row, col + i)) {
-                rightBound = i - 1;
-                break;
-            }
-
-            int[] counts = verticalCount(row, col + i, bottomBound, topBound, colorToCheck);
-            cellCount += counts[0];
-            sameCount += counts[1];
-
-            if (i != 0) {
-                cellCount++;
-                if (getColor(row, col + i).equals(colorToCheck)) {
-                    sameCount++;
-                }
-            }
-        }
-
-        for (int i = -1; i >= leftBound; i--) {
-            if (!withinBounds(row, col + i)) {
-                leftBound = i + 1;
-                break;
-            }
-
-            int[] counts = verticalCount(row, col + i, bottomBound, topBound, colorToCheck);
-            cellCount += counts[0];
-            sameCount += counts[1];
-
-            cellCount++;
-            if (getColor(row, col + i).equals(colorToCheck)) {
-                sameCount++;
-            }
-        }
-
-        return ((double) sameCount / (double) cellCount) >= happinessThreshold;
-    }
-
-    /**
-     *
-     * @param row:  specified starting row index
-     * @param col:  specified column index
-     * @param bottomBound   bottom boundary of ideal neighborhood
-     * @param topBound:     top boundary of ideal neighborhood
-     * @param colorToCheck:  color of cell at center of neighborhood
-     * @return  array that contains the number of cells and same color cells in the neighborhood column
-     * @author  dzhen2023
-     */
-    private int[] verticalCount(int row, int col, int bottomBound, int topBound, Color colorToCheck) {
-        int cellCount = 0;
-        int sameCount = 0;
-
-        for (int j = -1; j >= topBound; j--) {
-            if (!withinBounds(row + j, col)) {
-                break;
-            }
-            cellCount++;
-            if (getColor(row + j, col).equals(colorToCheck)) {
-                sameCount++;
-            }
-        }
-
-        for (int j = 1; j <= bottomBound; j++) {
-            if (!withinBounds(row + j, col)) {
-                break;
-            }
-            cellCount++;
-            if (getColor(row + j, col).equals(colorToCheck)) {
-                sameCount++;
-            }
-        }
-
-        return new int[] {cellCount, sameCount, topBound, bottomBound};
-    }
-
-    /**
-     * @param row: row index of grid
-     * @param col: column index of grid
-     * @return if row or column index is out of bounds
-     */
-    private boolean withinBounds(int row, int col) {
-        return !(row < 0 || row >= size || col < 0 || col >= size);
-    }
-
-    public int getNumOfRed() {
-        return counterRed;
-    }
-
-    public int getNumOfBlue() {
-        return counterBlue;
-    }
-
-    public int getSize() {
-        return size;
-    }
 }
 
 // for testing purposes
 class Main {
     public static void main (String[] args) {
-        RedBlueGrid grid1 = new RedBlueGrid(3,1,0,0,1);
-
-        grid1.setColor(1,1,Color.RED);
-        grid1.isHappy(0,0);
-    }
-}
-
-/*
-
-// test to check if the grid is configured properly
+        // test to check if the grid is configured properly
         RedBlueGrid test1 = new RedBlueGrid(8, 4, 0.2, 0.5, 0.3);
-        double square = test1.getSize() * test1.getSize();
-        double r =  Math.round((test1.getNumOfRed() / (0.8 * square))*10);
+        double square = test1.size * test1.size;
+        double r =  Math.round((test1.counter1 / (0.8 * square))*10);
         double red = r/10;
-        double b = Math.round((test1.getNumOfBlue() / (0.8 * square))*10);
+        double b = Math.round((test1.counter2 / (0.8 * square))*10);
         double blue = b/10;
-        double v = Math.round(((square - (test1.getNumOfRed() + test1.getNumOfRed()))/square)*10);
+        double v = Math.round(((square - (test1.counter1 + test1.counter2))/square)*10);
         double vacant = v/10;
         System.out.println(red);
         System.out.println(blue);
         System.out.println(vacant);
-        System.out.println((test1.getSize()) * (test1.getSize()));
+        System.out.println((test1.size) * (test1.size));
         if (red == 0.5 && blue == 0.5 && vacant == 0.2) {
             System.out.println("True");
         }
@@ -457,4 +346,6 @@ class Main {
         // 60% vacant; 30% red; 0.5 for happinessThreshold
         test2.reset(0.6, 0.3, 0.5);
         System.out.println("Color at (3,4) through reset: " + test2.getColor(3, 4));
- */
+
+    }
+}
