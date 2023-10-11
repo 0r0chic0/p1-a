@@ -290,7 +290,7 @@ public class RedBlueGrid {
             unhappyPeople.clear();
         }
 
-
+        System.out.println("Finished 1 cycle");
     }
 
     /**
@@ -352,7 +352,7 @@ public class RedBlueGrid {
     }
 
     /**
-     *
+     * Counts total cells and cells of a same color (as origin cell) a column of bound heights
      * @param row:  specified starting row index
      * @param col:  specified column index
      * @param bottomBound   bottom boundary of ideal neighborhood
