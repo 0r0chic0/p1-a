@@ -1,9 +1,7 @@
 package erehwon;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import  java.util.Random;
+import java.util.*;
 import java.util.List;
 
 public class RedBlueGrid {
@@ -256,38 +254,89 @@ public class RedBlueGrid {
     public void simulate(int numSteps) {
         for (int k = 0; k < numSteps; k++) {
 
-            List<Point> unhappyPeople = new ArrayList<>();
-            List<Point> vacant = new ArrayList<>();
+            List<Point> unhappyCells = new ArrayList<>();
+            List<Point> vacantCells = new ArrayList<>();
 
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
                     if (grid[i][j].equals(COLORS[0])) {
-                        vacant.add(new Point(i, j));
+                        vacantCells.add(new Point(i, j));
                     } else if (!isHappy(i, j)) {
-                        unhappyPeople.add(new Point(i, j));
+                        unhappyCells.add(new Point(i, j));
                     }
                 }
             }
 
-            for (int i = 0; i < vacant.size(); i++) {
-                int vacantX = vacant.get(i).x;
-                int vacantY = vacant.get(i).y;
+            for (int i = 0; i < vacantCells.size(); i++) {
+                int vacantX = vacantCells.get(i).x;
+                int vacantY = vacantCells.get(i).y;
 
-                for (int j = 0; j < unhappyPeople.size(); j++) {
-                    int unhappyX = unhappyPeople.get(j).x;
-                    int unhappyY = unhappyPeople.get(j).y;
+                for (int j = 0; j < unhappyCells.size(); j++) {
+                    int unhappyX = unhappyCells.get(j).x;
+                    int unhappyY = unhappyCells.get(j).y;
 
                     if (happinessCheck(vacantX, vacantY, grid[unhappyX][unhappyY])) {
                         grid[vacantX][vacantY] = grid[unhappyX][unhappyY];
                         grid[unhappyX][unhappyY] = COLORS[0];
+                        vacantCells.remove(i);
+                        unhappyCells.remove(j);
 
                         break;
                     }
                 }
             }
 
-            vacant.clear();
-            unhappyPeople.clear();
+            Map<Point, Double> redFractions = new HashMap<>();
+            Map<Point, Double> blueFractions = new HashMap<>();
+
+            for (Point vacantCell : vacantCells) {
+                redFractions.put(vacantCell, getFractionOfSameColor(vacantCell.x, vacantCell.y, COLORS[1]));
+                blueFractions.put(vacantCell, getFractionOfSameColor(vacantCell.x, vacantCell.y, COLORS[2]));
+            }
+
+            for (Point unhappyCell: unhappyCells) {
+                if (getColor(unhappyCell.x, unhappyCell.y).equals(COLORS[1]) && !redFractions.isEmpty()) {
+                    double maxFraction = redFractions.get(vacantCells.get(0));;
+                    int maxIndex = 0;
+
+                    for (int i = 1; i < vacantCells.size(); i++) {
+                        if (maxFraction <= redFractions.get(vacantCells.get(i))) {
+                            maxFraction = redFractions.get(vacantCells.get(i));
+                            maxIndex = i;
+                        }
+                    }
+
+                    grid[vacantCells.get(maxIndex).x][vacantCells.get(maxIndex).y] = getColor(unhappyCell.x, unhappyCell.y);
+                    grid[unhappyCell.x][unhappyCell.y] = COLORS[0];
+
+                    redFractions.remove(vacantCells.get(maxIndex));
+                    blueFractions.remove(vacantCells.get(maxIndex));
+                    vacantCells.remove(maxIndex);
+                } else if (getColor(unhappyCell.x, unhappyCell.y).equals(COLORS[2]) && !blueFractions.isEmpty()) {
+                    double maxFraction = blueFractions.get(vacantCells.get(0));
+                    int maxIndex = 0;
+
+                    for (int i = 1; i < vacantCells.size(); i++) {
+                        if (maxFraction <= blueFractions.get(vacantCells.get(i))) {
+                            maxFraction = blueFractions.get(vacantCells.get(i));
+                            maxIndex = i;
+                        }
+                    }
+
+                    grid[vacantCells.get(maxIndex).x][vacantCells.get(maxIndex).y] = getColor(unhappyCell.x, unhappyCell.y);
+                    grid[unhappyCell.x][unhappyCell.y] = COLORS[0];
+
+                    blueFractions.remove(vacantCells.get(maxIndex));
+                    redFractions.remove(vacantCells.get(maxIndex));
+                    vacantCells.remove(maxIndex);
+                }
+            }
+
+
+            redFractions.clear();
+            blueFractions.clear();
+            vacantCells.clear();
+            unhappyCells.clear();
         }
 
         System.out.println("Finished 1 cycle");
