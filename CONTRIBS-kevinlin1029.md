@@ -1,3 +1,4 @@
-- wrote setColor methoid;
+- wrote setColor method;
 - wrote shiftColor method;
 - wrote test for task2;
+- wrote  oneTimeStep method;
