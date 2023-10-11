@@ -1,7 +1,10 @@
 package erehwon;
 
 import org.junit.jupiter.api.Test;
-import java.awt.Color;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,6 +13,9 @@ public class StarterTests {
 
     @Test
     public void testCorrectCreation() {
+        // Test a large grid size
+        RedBlueGrid gridLarge = new RedBlueGrid(1000,4,0.2,0.5,0.5);
+
         RedBlueGrid grid1 = new RedBlueGrid(8, 4, 0.2, 0.5, 0.3);
         // checking correct number of vacant cells
         assertEquals(13, (grid1.getSize() * grid1.getSize()) - grid1.getNumOfRed() - grid1.getNumOfBlue());
@@ -125,6 +131,55 @@ public class StarterTests {
         assertEquals(1, grid1.fractionHappy());
         grid1.setColor(1,1,Color.RED);
         assertEquals(0,grid1.fractionHappy());
+    }
+
+    @Test
+    public void testOneStep() {
+        RedBlueGrid grid1 = new RedBlueGrid(8, 1, 0.2, 0.5, 0.7);
+        List<Point> unhappyCells = new ArrayList<>();
+        List<Point> vacantCells = new ArrayList<>();
+
+        for (int i = 0; i < grid1.getSize(); i++) {
+            for (int j = 0; j < grid1.getSize(); j++) {
+                if (grid1.getColor(i, j).equals(Color.WHITE)) {
+                    vacantCells.add(new Point(i, j));
+                } else if (!grid1.isHappy(i, j)) {
+                    unhappyCells.add(new Point(i, j));
+                }
+            }
+        }
+
+        int numOfUnhappy = unhappyCells.size();
+        int numOfVacant = vacantCells.size();
+
+        int numOfFilled = 0;
+        int numOfMoved = 0;
+
+        if (numOfVacant >= numOfUnhappy) {
+            for (Point vacantCell : vacantCells) {
+                if (!grid1.getColor(vacantCell.x, vacantCell.y).equals(Color.WHITE)) {
+                    numOfFilled++;
+                }
+            }
+
+            for (Point unhappyCell : unhappyCells) {
+                if (grid1.getColor(unhappyCell.x, unhappyCell.y).equals(Color.WHITE)) {
+                    numOfMoved++;
+                }
+            }
+
+            assertEquals(numOfMoved, numOfFilled);
+            assertEquals(numOfUnhappy, numOfMoved);
+        }
+
+        if (numOfVacant < numOfUnhappy) {
+            for (Point vacantCell : vacantCells) {
+                if (grid1.getColor(vacantCell.x, vacantCell.y).equals(Color.WHITE)) {
+                    numOfFilled++;
+                }
+            }
+            assertEquals(numOfVacant,numOfFilled);
+        }
     }
 }
 

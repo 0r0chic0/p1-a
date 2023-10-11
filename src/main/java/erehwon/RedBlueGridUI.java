@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import java.util.Hashtable;
 
 public class RedBlueGridUI extends JFrame {
-    private static final int GRID_SIZE = 400;
+    private static final int GRID_SIZE = 8;
     private static final double DEFAULT_VACANT = 0.15; //changed from 15
     private static final double DEFAULT_RED = 0.50; //changed from 50
     private static final int DEFAULT_NEIGHBORHOOD_DISTANCE = 1;
@@ -152,7 +152,7 @@ public class RedBlueGridUI extends JFrame {
     }
 
     private void simulate() {
-        while (rbgrid.fractionHappy() < 0.80) {
+        while (rbgrid.fractionHappy() < 0.85) {
             rbgrid.simulate(SIMULATION_STEPS);
             recolorUI();
             try {

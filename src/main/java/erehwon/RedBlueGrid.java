@@ -75,24 +75,24 @@ public class RedBlueGrid {
         counterRed = 0;
 
         for (int x,y, i = rng.nextInt(size); numberOfRed > 0 || numberOfBlue > 0; i = rng.nextInt(size)) {
-                for (int j = 0; j < size; j++) {
-                    if (numberOfRed > 0 && !rowWithVacant.get(i).isEmpty()) {
-                        x = i;
-                        y = rowWithVacant.get(i).get(0);
-                        grid[x][y] = COLORS[1];
-                        numberOfRed--;
-                        rowWithVacant.get(i).remove(0);
-                        counterRed++;
-                    }
-                    if (numberOfBlue > 0 && !rowWithVacant.get(i).isEmpty()) {
-                        x = i;
-                        y = rowWithVacant.get(i).get(0);
-                        grid[y][x] = COLORS[2];
-                        rowWithVacant.get(i).remove(0);
-                        numberOfBlue--;
-                        counterBlue++;
-                    }
+            for (int j = 0; j < size; j++) {
+                if (numberOfRed > 0 && !rowWithVacant.get(i).isEmpty()) {
+                    x = i;
+                    y = rowWithVacant.get(i).get(0);
+                    grid[x][y] = COLORS[1];
+                    numberOfRed--;
+                    rowWithVacant.get(i).remove(0);
+                    counterRed++;
                 }
+                if (numberOfBlue > 0 && !rowWithVacant.get(i).isEmpty()) {
+                    x = i;
+                    y = rowWithVacant.get(i).get(0);
+                    grid[y][x] = COLORS[2];
+                    rowWithVacant.get(i).remove(0);
+                    numberOfBlue--;
+                    counterBlue++;
+                }
+            }
         }
     }
 
@@ -266,7 +266,7 @@ public class RedBlueGrid {
 
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
-                    if (grid[i][j].equals(COLORS[0])) {
+                    if (getColor(i, j).equals(COLORS[0])) {
                         vacantCells.add(new Point(i, j));
                     } else if (!isHappy(i, j)) {
                         unhappyCells.add(new Point(i, j));
@@ -369,7 +369,6 @@ public class RedBlueGrid {
      * @param colorToCheck:    color to check neighborhood for
      * @throws IllegalArgumentException when grid index is out of range
      * @return  the fraction of same color cells in the neighborhood of specified
-     *
      * @author  dzhen2023
      */
     private double getFractionOfSameColor(int row, int col, Color colorToCheck) {
@@ -428,7 +427,7 @@ public class RedBlueGrid {
      * @param bottomBound   bottom boundary of ideal neighborhood
      * @param topBound:     top boundary of ideal neighborhood
      * @param colorToCheck:  color of cell at center of neighborhood
-     * @return  array that contains the number of cells and same color cells in the neighborhood column
+     * @return  array that contains the number of cells and same color cells in the bounded column
      * @author  dzhen2023
      */
     private int[] verticalCount(int row, int col, int bottomBound, int topBound, Color colorToCheck) {
