@@ -10,7 +10,6 @@ public class StarterTests {
 
     @Test
     public void testCorrectCreation() {
-
         RedBlueGrid grid1 = new RedBlueGrid(8, 4, 0.2, 0.5, 0.3);
         // checking correct number of vacant cells
         assertEquals(13, (grid1.getSize() * grid1.getSize()) - grid1.getNumOfRed() - grid1.getNumOfBlue());
