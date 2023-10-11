@@ -295,14 +295,28 @@ public class RedBlueGrid {
 
     /**
      * Checks specified cell if a colored cell would be happy there
-     * @param row:  row index of grid
-     * @param col:  column index of grid
-     * @param colorToCheck:    color to check happiness of
+     * @param row   row index of grid
+     * @param col   column index of grid
+     * @param colorToCheck  color to check happiness for
      * @throws IllegalArgumentException when grid index is out of range
-     * @return  if the color would be happy at specified row and col
-     * @author  dzhen2023
+     * @return if the color would be happy at specified row and col
+     * @author dzhen2023
      */
     private boolean happinessCheck(int row, int col, Color colorToCheck) {
+        return getFractionOfSameColor(row, col, colorToCheck) >= happinessThreshold;
+    }
+
+    /**
+     * Gets fraction of same color cells in neighborhood
+     * @param row:  row index of grid
+     * @param col:  column index of grid
+     * @param colorToCheck:    color to check neighborhood for
+     * @throws IllegalArgumentException when grid index is out of range
+     * @return  the fraction of same color cells in the neighborhood of specified
+     *
+     * @author  dzhen2023
+     */
+    private double getFractionOfSameColor(int row, int col, Color colorToCheck) {
         if (!withinBounds(row, col)) {
             throw new IllegalArgumentException("Out of Bounds");
         }
@@ -348,7 +362,7 @@ public class RedBlueGrid {
             }
         }
 
-        return ((double) sameCount / (double) cellCount) >= happinessThreshold;
+        return (double) sameCount / (double) cellCount;
     }
 
     /**
@@ -413,10 +427,9 @@ public class RedBlueGrid {
 // for testing purposes
 class Main {
     public static void main (String[] args) {
-        RedBlueGrid grid1 = new RedBlueGrid(3,1,0,0,1);
+        RedBlueGrid grid1 = new RedBlueGrid(8,1,0.2,0.6,0.8);
 
-        grid1.setColor(1,1,Color.RED);
-        grid1.isHappy(0,0);
+        grid1.simulate(20);
     }
 }
 

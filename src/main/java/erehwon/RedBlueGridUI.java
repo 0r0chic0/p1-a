@@ -17,7 +17,7 @@ public class RedBlueGridUI extends JFrame {
     private static final int DEFAULT_WINDOW_WIDTH  = 480;
     private static final String DEFAULT_UI_NAME = "EREHWON";
 
-    private final int SIMULATION_STEPS = 20;
+    private final int SIMULATION_STEPS = 1;
 
     private static final Color[] COLORS = {Color.RED, Color.BLUE, Color.WHITE};
 
