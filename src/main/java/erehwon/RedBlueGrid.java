@@ -266,7 +266,7 @@ public class RedBlueGrid {
 
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
-                    if (getColor(i, j).equals(COLORS[0])) {
+                    if (grid[i][j].equals(COLORS[0])) {
                         vacantCells.add(new Point(i, j));
                     } else if (!isHappy(i, j)) {
                         unhappyCells.add(new Point(i, j));
@@ -303,7 +303,7 @@ public class RedBlueGrid {
 
             for (Point unhappyCell: unhappyCells) {
                 if (getColor(unhappyCell.x, unhappyCell.y).equals(COLORS[1]) && !redFractions.isEmpty()) {
-                    double maxFraction = redFractions.get(vacantCells.get(0));;
+                    double maxFraction = redFractions.get(vacantCells.get(0));
                     int maxIndex = 0;
 
                     for (int i = 1; i < vacantCells.size(); i++) {
@@ -336,6 +336,10 @@ public class RedBlueGrid {
                     blueFractions.remove(vacantCells.get(maxIndex));
                     redFractions.remove(vacantCells.get(maxIndex));
                     vacantCells.remove(maxIndex);
+                }
+
+                if (vacantCells.isEmpty()) {
+                    break;
                 }
             }
 

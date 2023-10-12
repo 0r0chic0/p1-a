@@ -5,4 +5,4 @@
 - Wrote javadoc comments and specs
 - Abstracted some operations
 - Formatted code to follow style guide
-- Wrote tests for methods up till fractionHappy in stater tests file
+- Wrote tests for methods for all methods

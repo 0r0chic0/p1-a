@@ -200,6 +200,12 @@ public class StarterTests {
     @Test
     public void testSimulate() {
 
+        // Test simulate makes grid more happy
+        RedBlueGrid grid1 = new RedBlueGrid(8, 1, 0.2, 0.5,0.5);
+        double fhappy1 = grid1.fractionHappy();
+        grid1.simulate(20);
+        assertTrue( fhappy1 < grid1.fractionHappy());
+
     }
 }
 
