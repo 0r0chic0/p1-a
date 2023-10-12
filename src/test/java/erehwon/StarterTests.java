@@ -27,14 +27,19 @@ public class StarterTests {
         // checks if grid size is correct
         assertEquals(8, grid1.getSize());
 
+        // checks happinessThreshold
+        assertEquals(0.3, grid1.getHappinessThreshold());
+
         // checks if reset is working as intended
-        grid1.reset(0.2,0.5,0.3);
+        grid1.reset(0.2,0.5,0.4);
         // checking correct number of vacant cells
         assertEquals(13, (grid1.getSize()* grid1.getSize()) - grid1.getNumOfRed() - grid1.getNumOfBlue());
         // checking correct number of red cells
         assertEquals(26, grid1.getNumOfRed());
         // checking correct number of red cells
         assertEquals(25, grid1.getNumOfBlue());
+        // checking new happinessThreshold
+        assertEquals(0.4, grid1.getHappinessThreshold());
 
         // checking when we use 0
         RedBlueGrid grid2 = new RedBlueGrid(8, 1, 0, 0, 0.5);
@@ -155,6 +160,8 @@ public class StarterTests {
         int numOfFilled = 0;
         int numOfMoved = 0;
 
+        grid1.oneTimeStep();
+
         if (numOfVacant >= numOfUnhappy) {
             for (Point vacantCell : vacantCells) {
                 if (!grid1.getColor(vacantCell.x, vacantCell.y).equals(Color.WHITE)) {
@@ -174,12 +181,25 @@ public class StarterTests {
 
         if (numOfVacant < numOfUnhappy) {
             for (Point vacantCell : vacantCells) {
-                if (grid1.getColor(vacantCell.x, vacantCell.y).equals(Color.WHITE)) {
+                if (!grid1.getColor(vacantCell.x, vacantCell.y).equals(Color.WHITE)) {
                     numOfFilled++;
                 }
             }
             assertEquals(numOfVacant,numOfFilled);
         }
+    }
+
+    @Test
+    public void testOutOfBounds() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new RedBlueGrid(5, 1, 0.2, 0.5, 0.7).getColor(-1, -1));
+        assertThrows(IllegalArgumentException.class,
+                () -> new RedBlueGrid(5, 1, 0.2, 0.5, 0.7).shiftColor(-1, -1));
+    }
+
+    @Test
+    public void testSimulate() {
+
     }
 }
 

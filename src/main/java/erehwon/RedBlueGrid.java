@@ -23,11 +23,11 @@ public class RedBlueGrid {
      *                              another cell to be considered in the neighborhood;
      *                              requires neighborhoodDistance >= 1
     * @param fractionVacant:    the fraction of vacant (white) cells in the grid;
-     *                          requires fractionVacant >= 0 and fractionVacant <= 1
+     *                          requires 0 <= fractionVacant <= 1
     * @param fractionRed:   the fraction of non-vacant (not white) red cells in the grid
-     *                      requires fractionRed >= 0 and fractionRed <= 1
+     *                      requires 0 <= fractionRed <= 1
     * @param happinessThreshold:    the fraction of same color cells in the neighborhood of a cell to attain happiness;
-     *                              requires happinessThreshold >= 0 and happinessThreshold <= 1
+     *                              requires 0 <= happinessThreshold <= 1
     * @author dzhen2023
     */
     public RedBlueGrid(int size,
@@ -46,9 +46,9 @@ public class RedBlueGrid {
     /**
      * Randomizes grid cell colors with specified inputs.
      * @param fractionVacant:   fraction of vacant (white) cells the grid is to have;
-     *                          requires fractionVacant >= 0 and fractionVacant <= 1
+     *                          requires 0 <= fractionVacant <= 1
      * @param fractionRed:  fraction of non-vacant red cells the grid is to have;
-     *                      requires fractionRed >= 0 and fractionRed <= 1
+     *                      requires 0 <= fractionRed <= 1
      * @author  dzhen2023
      */
     private void randomizeGrid(double fractionVacant, double fractionRed) {
@@ -173,11 +173,11 @@ public class RedBlueGrid {
     /**
      * Randomize grid colors and cell happiness threshold with desired inputs.
      * @param fractionVacant:   fraction of vacant (white) cells for grid to have;
-     *                          requires fractionVacant >= 0 and fractionVacant <= 1
+     *                          requires 0 <= fractionVacant <= 1
      * @param fractionRed:  fraction of red cells for grid to have;
-     *                      requires fractionRed >= 0 and fractionRed <= 1
+     *                      requires 0 <= fractionRed <= 1
      * @param happinessThreshold:   new happinessThreshold;
-     *                              requires happinessThreshold >= 0 and happinessThreshold <= 1
+     *                              requires 0 <= happinessThreshold <= 1
      * @author  dzhen2023
      */
     public void reset(double fractionVacant,
@@ -476,6 +476,10 @@ public class RedBlueGrid {
 
     public int getSize() {
         return size;
+    }
+
+    public double getHappinessThreshold() {
+        return happinessThreshold;
     }
 }
 
