@@ -10,8 +10,8 @@ public class RedBlueGrid {
     private final int neighborhoodDistance;
     private double happinessThreshold;
     private final int size;
-    private int counterRed; // changed name
-    private int counterBlue; // changed name
+    private int counterRed;
+    private int counterBlue;
 
     /**
     * Constructs n x n RedBlueGrid.
@@ -128,7 +128,6 @@ public class RedBlueGrid {
 
         boolean isValidColor = false;
 
-        //this for loop is to check whether the color is valid
         for (Color validColor: COLORS) {
             if (color.equals(validColor)) {
                 isValidColor = true;
@@ -139,9 +138,9 @@ public class RedBlueGrid {
             return false;
         }
 
-        grid[row][col] = color; //if the color is valid, set the color into cell
+        grid[row][col] = color;
 
-        return true; // you may need to change this
+        return true;
     }
 
 
@@ -224,31 +223,22 @@ public class RedBlueGrid {
      * @author kevinlin1029
      */
     public void oneTimeStep() {
-        //use point class to store coordinates of cells;
+
         List<Point> unhappyPeople = new ArrayList<>();
         List<Point> vacant = new ArrayList<>();
 
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                if (grid[i][j].equals(COLORS[0])) {
-                    vacant.add(new Point(i, j));  //identify vancant cells
-                } else if (!isHappy(i, j)) {
-                    unhappyPeople.add(new Point(i, j)); //identify unhappy people
-                }
-            }
-        }
+        initializeCellLists(unhappyPeople, vacant);
 
-        // ensures that the movement of unhappy people to vacant cells is done in a randomized manner.
+
         Collections.shuffle(unhappyPeople);
-        //compare which one is the minimum
         int mini = Math.min(vacant.size(), unhappyPeople.size());
 
         for (int i = 0; i < mini; i++) {
             Point origin = unhappyPeople.get(i);
             Point empty = vacant.get(i);
 
-            grid[empty.x][empty.y] = grid[origin.x][origin.y]; // Move  person to the empty cell
-            grid[origin.x][origin.y] = COLORS[0]; // Set the original cell to vacant after moving people
+            grid[empty.x][empty.y] = grid[origin.x][origin.y];
+            grid[origin.x][origin.y] = COLORS[0];
         }
     }
 
@@ -260,19 +250,10 @@ public class RedBlueGrid {
      */
     public void simulate(int numSteps) {
         for (int k = 0; k < numSteps; k++) {
-
             List<Point> unhappyCells = new ArrayList<>();
             List<Point> vacantCells = new ArrayList<>();
 
-            for (int i = 0; i < size; i++) {
-                for (int j = 0; j < size; j++) {
-                    if (grid[i][j].equals(COLORS[0])) {
-                        vacantCells.add(new Point(i, j));
-                    } else if (!isHappy(i, j)) {
-                        unhappyCells.add(new Point(i, j));
-                    }
-                }
-            }
+            initializeCellLists(unhappyCells, vacantCells);
 
             for (int i = 0; i < vacantCells.size(); i++) {
                 int vacantX = vacantCells.get(i).x;
@@ -319,18 +300,35 @@ public class RedBlueGrid {
             vacantCells.clear();
             unhappyCells.clear();
         }
+    }
 
-        System.out.println("Finished 1 cycle");
+    /**
+     * Initialize lists that keep track of vacant cells and unhappy cells.
+     * @param unhappyCells: list of unhappy cells to initialize
+     *                      requires that unhappyCells is empty
+     * @param vacantCells:  list of vacant cells to initialize
+     *                      requires that vacantCells is empty
+     */
+    private void initializeCellLists(List<Point> unhappyCells, List<Point> vacantCells) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (grid[i][j].equals(COLORS[0])) {
+                    vacantCells.add(new Point(i, j));
+                } else if (!isHappy(i, j)) {
+                    unhappyCells.add(new Point(i, j));
+                }
+            }
+        }
     }
 
     /**
      * Moves an unhappy cell to a cell closer to more of its kind.
      * @param colorFractions1:  list of fractions of same color cells in the neighborhood a vacant cell
-     *                          requires that colorFractions1 is not empty and contains no null entries
+     *                          requires that colorFractions1 is not empty
      * @param colorFractions2:  list of fractions of different color cells in the neighborhood a vacant cell
-     *                          requires that colorFractions2 is not empty and contains no null entries
+     *                          requires that colorFractions2 is not empty
      * @param vacantCells:  list of vacant cells
-     *                      requires that is not empty is not empty and contains no null entries
+     *                      requires that vacantCells is not empty
      * @param unhappyCell:  position of unhappyCell on the grid
      *                      requires that unhappyCell exists on the grid
      * @author  dzhen2023
@@ -392,7 +390,6 @@ public class RedBlueGrid {
 
         for (int i = 0; i <= rightBound; i++) {
             if (!withinBounds(row, col + i)) {
-                rightBound = i - 1;
                 break;
             }
 
@@ -410,7 +407,6 @@ public class RedBlueGrid {
 
         for (int i = -1; i >= leftBound; i--) {
             if (!withinBounds(row, col + i)) {
-                leftBound = i + 1;
                 break;
             }
 
@@ -473,18 +469,34 @@ public class RedBlueGrid {
         return !(row < 0 || row >= size || col < 0 || col >= size);
     }
 
+    /**
+     * Gets number of red cells in the grid.
+     * @return count of red cells after a randomization
+     */
     public int getNumOfRed() {
         return counterRed;
     }
 
+    /**
+     * Gets number of blue cells in the grid.
+     * @return count of blue cells after a randomization
+     */
     public int getNumOfBlue() {
         return counterBlue;
     }
 
+    /**
+     * Gets the number of rows/columns in the grid.
+     * @return size of grid
+     */
     public int getSize() {
         return size;
     }
 
+    /**
+     * Gets the happinessThreshold of the grid.
+     * @return happinessThreshold of the grid
+     */
     public double getHappinessThreshold() {
         return happinessThreshold;
     }
