@@ -1,8 +1,8 @@
-+-wrote getColor method code
+-wrote getColor method code
 
 -wrote fractionHappy method code
 
--fixed the implementation of void randomizeGrid method on line 62
+-worked on the implementation of randomizeGrid method and added variables to test if the grid is created properly (counerRed and counterBlue)
 
 -created the test for checking the correct implementation of grid
 
