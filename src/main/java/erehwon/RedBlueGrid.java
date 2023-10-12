@@ -74,7 +74,7 @@ public class RedBlueGrid {
         counterBlue = 0;
         counterRed = 0;
 
-        for (int x,y, i = rng.nextInt(size); numberOfRed > 0 || numberOfBlue > 0; i = rng.nextInt(size)) {
+        for (int x, y, i = rng.nextInt(size); numberOfRed > 0 || numberOfBlue > 0; i = rng.nextInt(size)) {
             for (int j = 0; j < size; j++) {
                 if (numberOfRed > 0 && !rowWithVacant.get(i).isEmpty()) {
                     x = i;
@@ -303,39 +303,9 @@ public class RedBlueGrid {
 
             for (Point unhappyCell: unhappyCells) {
                 if (getColor(unhappyCell.x, unhappyCell.y).equals(COLORS[1]) && !redFractions.isEmpty()) {
-                    double maxFraction = redFractions.get(vacantCells.get(0));
-                    int maxIndex = 0;
-
-                    for (int i = 1; i < vacantCells.size(); i++) {
-                        if (maxFraction <= redFractions.get(vacantCells.get(i))) {
-                            maxFraction = redFractions.get(vacantCells.get(i));
-                            maxIndex = i;
-                        }
-                    }
-
-                    grid[vacantCells.get(maxIndex).x][vacantCells.get(maxIndex).y] = getColor(unhappyCell.x, unhappyCell.y);
-                    grid[unhappyCell.x][unhappyCell.y] = COLORS[0];
-
-                    redFractions.remove(vacantCells.get(maxIndex));
-                    blueFractions.remove(vacantCells.get(maxIndex));
-                    vacantCells.remove(maxIndex);
+                    moveCloseToHappiness(redFractions, blueFractions, vacantCells, unhappyCell);
                 } else if (getColor(unhappyCell.x, unhappyCell.y).equals(COLORS[2]) && !blueFractions.isEmpty()) {
-                    double maxFraction = blueFractions.get(vacantCells.get(0));
-                    int maxIndex = 0;
-
-                    for (int i = 1; i < vacantCells.size(); i++) {
-                        if (maxFraction <= blueFractions.get(vacantCells.get(i))) {
-                            maxFraction = blueFractions.get(vacantCells.get(i));
-                            maxIndex = i;
-                        }
-                    }
-
-                    grid[vacantCells.get(maxIndex).x][vacantCells.get(maxIndex).y] = getColor(unhappyCell.x, unhappyCell.y);
-                    grid[unhappyCell.x][unhappyCell.y] = COLORS[0];
-
-                    blueFractions.remove(vacantCells.get(maxIndex));
-                    redFractions.remove(vacantCells.get(maxIndex));
-                    vacantCells.remove(maxIndex);
+                    moveCloseToHappiness(blueFractions, redFractions, vacantCells, unhappyCell);
                 }
 
                 if (vacantCells.isEmpty()) {
@@ -352,6 +322,39 @@ public class RedBlueGrid {
 
         System.out.println("Finished 1 cycle");
     }
+
+    /**
+     * Moves an unhappy cell to a cell closer to more of its kind.
+     * @param colorFractions1:  list of fractions of same color cells in the neighborhood a vacant cell
+     *                          requires that colorFractions1 is not empty and contains no null entries
+     * @param colorFractions2:  list of fractions of different color cells in the neighborhood a vacant cell
+     *                          requires that colorFractions2 is not empty and contains no null entries
+     * @param vacantCells:  list of vacant cells
+     *                      requires that is not empty is not empty and contains no null entries
+     * @param unhappyCell:  position of unhappyCell on the grid
+     *                      requires that unhappyCell exists on the grid
+     * @author  dzhen2023
+     */
+    private void moveCloseToHappiness(Map<Point, Double> colorFractions1, Map<Point, Double> colorFractions2,
+                                      List<Point> vacantCells, Point unhappyCell) {
+        double maxFraction = colorFractions1.get(vacantCells.get(0));
+        int maxIndex = 0;
+
+        for (int i = 1; i < vacantCells.size(); i++) {
+            if (maxFraction <= colorFractions1.get(vacantCells.get(i))) {
+                maxFraction = colorFractions1.get(vacantCells.get(i));
+                maxIndex = i;
+            }
+        }
+
+        grid[vacantCells.get(maxIndex).x][vacantCells.get(maxIndex).y] = getColor(unhappyCell.x, unhappyCell.y);
+        grid[unhappyCell.x][unhappyCell.y] = COLORS[0];
+
+        colorFractions1.remove(vacantCells.get(maxIndex));
+        colorFractions2.remove(vacantCells.get(maxIndex));
+        vacantCells.remove(maxIndex);
+    }
+
 
     /**
      * Checks specified cell if a colored cell would be happy there
