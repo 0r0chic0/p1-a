@@ -6,3 +6,4 @@
 - Abstracted some operations
 - Formatted code to follow style guide
 - Wrote tests for methods for all methods
+- Finalized simulate code
